@@ -121,6 +121,7 @@ set magic           " Make characters have the same meaning as in grep regexp
                     "   characters are parsed literally and must be preceded by \
                     "   to activate their special meaning.
                     " ':set nomagic' is the opposite of ':set magic'
+set updatetime=250  " Update faster (CursorHold event)
 set lazyredraw      " Don't allow redraw when using macros
 set mouse=a         " Allow normal mouse behavior in all 4 principal modes
 set number numberwidth=5
@@ -995,6 +996,11 @@ set directory=~/.vim/tmp
 " See ':help spell-quickstart'
 " After manual editing of ~/.vim/after/$USER-*.utf-8.add, recreate corresponding
 " *.spl files, with: ':mkspell! ~/.vim/after/$USER-*.utf-8.add'
+" '1zg' or '2zg' to add word under cursor to tech or general dictionary
+" '1zug' or '2zug' to undo adding word under cursor to tech or general dict
+" '1zw' or '1zw' to add word under cursor to bad spelling dict
+" '1zuw' or '2zuw' to undo adding word under cursor to bad spelling dict
+
 set spell spelllang=en_us,fr,de,es,cjk
                     " enable spellchecking in English, French, German, Spanish
                     " 'cjk' indicate Chinese, Japanese and Korean, but treatment
