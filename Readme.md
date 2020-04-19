@@ -1,6 +1,6 @@
 # README #
 
-This repository at directory level `~/.dotfiles' contains:
+This repository, at local repo's directory level `~/.dotfiles', contains:
 
     .bashrc
     .bash_aliases
