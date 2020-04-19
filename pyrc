@@ -1,0 +1,44 @@
+#! /usr/bin/python3
+'''
+Python boilerplate imports and definition in order
+to start the python interpreter console with basic
+cmd definitions
+'''
+
+import os
+import sys
+
+class clear(object):
+    '''
+    something to clear the python interpreter console
+    usage: >>> clear
+    '''
+
+    def __repr__(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
+        #clear = lambda: os.system('cls' if os.name == 'nt' else 'clear')
+        return ''
+
+clear = clear()
+
+
+class exit(object):
+    '''
+    something to exit the python interpreter console
+    usage: >>> exit
+    '''
+    exit = exit # original object
+    def __repr__(self):
+        self.exit() # call original
+        return ''
+
+quit = exit = exit()
+
+
+class Prompt:
+    def __str__(self):
+        return '%s >>> ' % os.getcwd()
+
+sys.ps1 = Prompt()
+del sys
+del Prompt

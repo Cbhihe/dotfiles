@@ -1,0 +1,23 @@
+$include /etc/inputrc
+# user must be part of the `wheel` group for above line to be effective
+
+# customize Readline’s key bindings and make them whatever you like. 
+# Readline reads ~/.inputrc file on startup 
+
+set show-all-if-unmodified on
+set editing-mode vi
+#set echo-control-characters off
+
+#set show-mode-in-prompt on
+#set vi-ins-mode-string \1\e[6 q\2
+#set vi-cmd-mode-string \1\e[2 q\2
+
+# macro for key binding: 
+
+# Ctrl+S: insert $(...)
+#  Move to line begin with Ctrl+A ,put `$(` there.
+#  Move to end of line with Ctrl+E then put `)` there.
+"\C-s": "\C-a$(\C-e)"
+
+# Alt+S: prefix cmd line with `sudo` and place cursor at end of line.
+"\es": "\C-asudo \C-e"
