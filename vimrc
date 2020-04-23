@@ -211,7 +211,7 @@ set wildmode=longest,list
 "}}}1
 
 " =========================
-" Mappings {{{1
+" Mappings   {{{1
 " =========================
 set nopaste         " required for abbreviation and insertmode mapping to work
                     " in terminal
@@ -510,6 +510,8 @@ let g:syntastic_mode_map = {
 " ----------------------------
 " See available checkers with ':h syntastic-checkers' in vim buffer
 " ----------------------------
+let g:syntastic_extra_filetypes = ['make', 'gitcommit']
+
 let g:syntastic_java_checkers = []
                 " Manual disabling of Syntastic Java diagnostics
                 " due to incompatibility with YCM's native RT diagnostics
@@ -540,9 +542,10 @@ let g:syntastic_fortran_checkers = ['gfortran']
 let g:syntastic_php_checkers = ['php', 'phplint']
                 " 'phplint' not installed as of 2018.10.18
 
+"lklflf  ñfdf
 let g:syntastic_html_checkers = ['tidy']
                 " Install with pacman
-
+"123lklflf  ñfdf
 let g:syntastic_vim_checkers = ['vint', 'vimlint', 'vimlparser']
                 " Obtained directly from Github.com
                 " vint installed from AUR is located at /usr/bin/vint
