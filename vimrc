@@ -28,10 +28,15 @@ source ~/.vim/functions.vim
                 " check loaded plugins' rt path
 " :echo syntastic#util#system('echo "$path"')
                 " see syntastic's idea of env-var $path
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
+
+" ---- section only useful for use with `vundlevim/vundle.vim'  {{{2
+" Lines commented with 3 double quotes can be activated by removing them,
+" while single quotes remain.
+
+"""filetype off
+"""set rtp+=~/.vim/bundle/Vundle.vim
                 " set run-time path for vundle, required
-call vundle#begin()
+"""call vundle#begin()
                 " initialize vundle, required
 
 " keep all 'plugin' commands below this line
@@ -40,35 +45,38 @@ call vundle#begin()
 "  'user/repository.git' format
 " for vim scripts: reference the plugin by name as it appears on site
 
-Plugin 'vundlevim/vundle.vim'
+"""Plugin 'vundlevim/vundle.vim'
                 " let vundle manage vundle, required
-Plugin 'vim-syntastic/syntastic'
+"""Plugin 'vim-syntastic/syntastic'
                 " syntax checker
-Plugin 'ycm-core/youcompleteme'
+"""Plugin 'ycm-core/youcompleteme'
                 " compiled plugin 'youcompleteme.vim' in
                 " '/usr/share/vim/vimfiles/autoload'
-Plugin 'raimondi/delimitmate'
+"""Plugin 'raimondi/delimitmate'
                 " replaces 'townk/vim-autoclose' below
                 " unlike 'townk/vim-autoclose' it takes syntax into account
                 " installed directly from plugins' repository
-Plugin 'dougireton/vim-chef'
+"""Plugin 'dougireton/vim-chef'
                 " detects chef cookbook and chef-repo files and sets the filetype
                 " to 'ruby.chef'
-Plugin 'jimhester/lintr'
+"""Plugin 'jimhester/lintr'
                 " detects syntax errors and inconsistencies in r scripts
                 " git-cloned from https://github.com/jimhester/lintr.git
-Plugin 'vim-scripts/latex-suite-aka-vim-latex'
+"""Plugin 'vim-scripts/latex-suite-aka-vim-latex'
                 " located at
                 " https://github.com/vim-scripts/latex-suite-aka-vim-latex.git
-Plugin 'syngan/vim-vimlint'
+"""Plugin 'syngan/vim-vimlint'
                 " located at https://github.com/syngan/vim-vimlint.git
                 " written in vim, hence very slow with syntastic
-Plugin 'ynkdir/vim-vimlparser'
+"""Plugin 'ynkdir/vim-vimlparser'
                 " located at https://github.com/ynkdir/vim-vimlparser.git
-Plugin 'kuniwak/vint'
+"""Plugin 'kuniwak/vint'
                 " cloned from https://github.com/kuniwak/vint  << deprecated
                 " or installed from aur as 'python-vint'  << ok
                 " can also be installed via '/usr/bin/python3 -m pip install ...'
+
+" ---- disabled vundle-managed plugins   {{{3
+" ====================================
 "Plugin 'Vimjas/vint'
                 " located at https://github.com/Vimjas/vint
                 " vim script Language Lint implemented in Python
@@ -87,10 +95,15 @@ Plugin 'kuniwak/vint'
 "Plugin 'vim/matchit.vim'
                 " part of vim standard distribution since vim 6.0
 "Plugin 'karamcc/vim-streamline'
-                " statusline changes to adapt to theme
+" statusline changes to adapt to theme  }}}3
 " ------------------------------------
-" all plugins must be added before above line
-call vundle#end()
+" all vundle-managed plugins must be added before above line
+"""call vundle#end()  }}}2
+
+packloadall
+                " Automatic loading of *.vim files in
+                " ~/vim/pack/plugins/start/
+                " Activate vim 8.x native plugins management
 
 filetype plugin indent on
                 " Required
@@ -352,6 +365,9 @@ cnoremap lg !ls -AF *<C-Z>
 
 map <leader>g :YcmCompleter GoToDefinitionElseDeclaration<cr>
                     " Define a shortcut for YCM goto definition
+
+map <Leader>pup :term sh -c "for p in ~/.vim/pack/plugins/start/*; do echo \"$p\" ; git -C \"$p\" pull; done"<CR>
+                " Plugins' git-repo update mapping
 "}}}1
 
 " =========================
