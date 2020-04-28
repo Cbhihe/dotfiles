@@ -29,7 +29,7 @@ source ~/.vim/functions.vim
 " :echo syntastic#util#system('echo "$path"')
                 " see syntastic's idea of env-var $path
 
-" ---- section only useful for use with `vundlevim/vundle.vim'  {{{2
+" ---- use with `vundlevim/vundle.vim'  {{{2
 " Lines commented with 3 double quotes can be activated by removing them,
 " while single quotes remain.
 
@@ -98,12 +98,33 @@ source ~/.vim/functions.vim
 " statusline changes to adapt to theme  }}}3
 " ------------------------------------
 " all vundle-managed plugins must be added before above line
-"""call vundle#end()  }}}2
+"""call vundle#end()
+"}}}2
 
-packloadall
-                " Automatic loading of *.vim files in
-                " ~/vim/pack/plugins/start/
-                " Activate vim 8.x native plugins management
+" ---- use with vim 8.x native plugins management  {{{2
+set loadplugins
+                " Default: on
+                " Option can be reset in ~/.vimrc to 'noloadplugins'
+                " in order to disable all plugin loading.
+if &loadplugins
+    if has('packages')
+        " Optional lazy loading (with!)of *.vim files in " ~/vim/pack/plugins/opt/
+        " Pick loaded plugins one by one
+        packadd! delimitmate
+        packadd! syntastic
+        packadd! vim-vimlint
+        packadd! vim-vimlparser
+        packadd! vint
+        packadd! lintr
+        packadd! youcompleteme
+        "packadd! latex-suite-aka-vim-latex
+        "packadd! vim-chef
+    else
+        " Automatic loading of *.vim files in ~/vim/pack/plugins/start/
+        packloadall
+    endif
+endif
+" }}}2
 
 filetype plugin indent on
                 " Required
@@ -366,8 +387,9 @@ cnoremap lg !ls -AF *<C-Z>
 map <leader>g :YcmCompleter GoToDefinitionElseDeclaration<cr>
                     " Define a shortcut for YCM goto definition
 
-map <Leader>pup :term sh -c "for p in ~/.vim/pack/plugins/start/*; do echo \"$p\" ; git -C \"$p\" pull; done"<CR>
-                " Plugins' git-repo update mapping
+map <Leader>vpu :term sh -c "for p in ~/.vim/pack/plugins/{opt,start}/*; do if [ -n \"$(\ls -A $(dirname \"$p\"))\" ]; then echo \"$p\" ; git -C \"$p\" pull --recurse-submodules; fi; done"<CR>
+"map <Leader>vpu :term sh -c "for p in ~/.vim/pack/plugins/{start,opt}/*; do echo \"$p\" ; git -C \"$p\" pull; done"<CR>
+                    " `vim plugins update' for git-repo update
 "}}}1
 
 " =========================
