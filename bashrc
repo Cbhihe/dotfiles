@@ -43,7 +43,9 @@ MAILCHECK=60
 # See bash(1) for more options
 HISTFILE=$HOME/.bash_history    # Default
 HISTTIMEFORMAT='%F %T - '; export HISTTIMEFORMAT
-# HISTTIMEFORMAT="%Y%m%d %T - "
+#HISTTIMEFORMAT="%Y%m%d %T - "
+# Ignore specific commands (full length match)
+HISTIGNORE="?:cd:ls:ll:bg:fg:vim:git status"
 HISTSIZE=300                    # Default: 500
 HISTFILESIZE=1200               # Default: HISTZISE
 HISTCONTROL=ignoreboth
@@ -59,7 +61,10 @@ shopt -s histappend
 # backup of history file at most every 30 minutes
 #  test result of `find` = any file modified 30 min before or less at test time
 [ -z "$(find "$HISTFILE".backup~ -mmin -30 2>/dev/null)" ] \
-    && /usr/bin/cp -f --backup "$HISTFILE" "$HISTFILE".backup~
+    && { \rm -f "$HISTFILE".backup~ ; \
+    /usr/bin/cp --force --backup "$HISTFILE" "$HISTFILE".backup~; }
+# `{ list; of; commands;}'
+# allows group execution of cmds' list in current shell
 
 # define history interactive editor (used with 'fc -e')
 export FCEDIT='/usr/bin/vim'
@@ -67,13 +72,13 @@ export FCEDIT='/usr/bin/vim'
 # Synchronize all current interactive shells' histories
 # Modified from:
 # https://gist.github.com/jan-warchol/89f5a748f7e8a2c9e91c9bc1b358d3ec
-# Last edit: 2020.04.28 at 17:31:57 [ckb]
+# Last edit: 2020.04.30 at 17:53:07 [ckb]
 source /opt/scripts/sync-history.sh
 
 # Check history expansions before running the command
 # If disabled, this option can be temporarily replaced by appending :p to
-#+ history expansion, as in: '>!n:p`  where n is history command number
-shopt -s histverify   # made redundant by the use of 'magic-space' in ~/.inputrc
+# history expansion, as in: '> !n:p`  where n is the history command number
+shopt -s histverify   # made redundant using 'magic-space' in ~/.inputrc
 # }}}1
 
 # ==================================================
@@ -126,30 +131,6 @@ if ! shopt -oq posix; then
   fi
 fi
 # }}}1
-
-# ==================================================
-## Color     {{{1
-# Set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color)
-        color_prompt=yes;;
-esac
-
-# Comment for a non colored prompt, when the terminal has the capability
-# Turned off by default to not distract the user.
-force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-    # We have color support; assume it's compliant with Ecma-48
-    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-    # a case would tend to support setf rather than setaf.)
-        color_prompt=yes
-    else
-        color_prompt=
-    fi
-fi
-#    }}}1
 
 # ==================================================
 ##  Git   {{{1
@@ -205,6 +186,57 @@ vpd() {
     fi
 }
 #   }}}1
+
+# ==================================================
+## Color     {{{1
+# Set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color)
+        color_prompt=yes;;
+esac
+
+# Comment for a non colored prompt, when the terminal has the capability
+# Turned off by default to not distract the user.
+force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+    # We have color support; assume it's compliant with Ecma-48
+    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+    # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
+    else
+        color_prompt=
+    fi
+fi
+#    }}}1
+
+# ==================================================
+## Cursor style    {{{1
+
+# CSI Ps SP q   (where control sequence insert (CSI) is '\033[')
+#     Set cursor style (DECSCUSR), VT520.
+#     Ps = 0  -> blinking block.
+#     Ps = 1  -> blinking block (default).
+#     Ps = 2  -> steady block.
+# >>  Ps = 3  -> blinking underline.
+#     Ps = 4  -> steady underline.
+#     Ps = 5  -> blinking bar (xterm).
+#     Ps = 6  -> steady bar (xterm).
+
+# CAUTION: this is terminal specific !
+if [ "$color_prompt" = yes ]; then
+    printf '%b' '\033[3 q'   # set to blinking underscore
+fi
+
+# cursor modifiers can also be introduced in PS1 (prompt) definition.
+#cursor_background_black=0
+#cursor_background_red=64
+#cursor_foreground_yellow=12
+#cursor_style_underscore=2
+#cursor_styles="\e[?${cursor_style_underscore};${cursor_foreground_yellow};${cursor_background_red};c"
+
+#    }}}1
 
 # ==================================================
 ##  Prompt    {{{1

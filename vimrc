@@ -107,9 +107,10 @@ set loadplugins
                 " Option can be reset in ~/.vimrc to 'noloadplugins'
                 " in order to disable all plugin loading.
 if &loadplugins
-    if has('packages')
-        " Optional lazy loading (with!)of *.vim files in " ~/vim/pack/plugins/opt/
-        " Pick loaded plugins one by one
+    " Lazy loading (with '!') of *.vim files in ~/vim/pack/plugins/opt/
+    if has('packages')  " Pick loaded plugins one by one
+        " Make % cmd jump to matching HTML tags, if/else/endif constructs, etc
+        packadd! matchit
         packadd! delimitmate
         packadd! syntastic
         packadd! vim-vimlint
@@ -117,7 +118,7 @@ if &loadplugins
         packadd! vint
         packadd! lintr
         packadd! youcompleteme
-        "packadd! latex-suite-aka-vim-latex
+        packadd! latex-suite-aka-vim-latex
         "packadd! vim-chef
     else
         " Automatic loading of *.vim files in ~/vim/pack/plugins/start/
@@ -141,6 +142,10 @@ let g:rmd_include_html = 1
 " =========================
 " General settings   {{{1
 " =========================
+set path+=**        " Default: 'path=.,/usr/include,,'
+                    " Define directories to be searched when 'gf', '[f',i
+                    " ']f', ':find', ':sfind', ':tabfind', etc. are used.
+                    " '**' searches downwards 30 dir levels by default.
 set noerrorbells    " Turn off audible error bells
 set visualbell
 "set t_vb=^[[?5h$<100>^[[?5l
@@ -186,11 +191,20 @@ set fileformat=unix " Set file format locally
 "}}}1
 
 " =========================
+" Buffer swap, backup, write-backup files, temporary working directory  {{{1
+" =========================
+set noswapfile      " disable swap for vim buffers
+set nobackup        " don't make ~ file backups
+set writebackup     " save a temporary backup of file(s) being edited with vim
+set hidden          " Allow switching buffers w/o writing to disk
+set backupdir=~/.vim/backups
+set directory=~/.vim/tmp
+"}}}1
+
+" =========================
 " Sane editing {{{1
 " =========================
 
-packadd! matchit    " Make % cmd jump to matching HTML tags, if/else/endif
-                    " constructs, etc.
 set wrap            " Display word wrapped text; do not change text in buffer
 set linebreak       " Intelligent wrapping occurs at characters " ^I!@*-+;:,./?"
                     " (per vim default) or by 'breakat' option
@@ -224,7 +238,6 @@ set listchars=tab:>-,trail:@
                     " where '-' are added as padding
                     " Show any spurious trailing space at eol as '@'
 set cindent         " Make indent rule stricter for C programs
-set cursorline      " Highlight current line (where cursor is)
 set wildmenu        " Keyword completion. Pick choice of word with CTRL-P, CTRL-N
                     " cmd completion is enhanced by means of 'wildchar'
                     " Requires module +wildmenu feature
@@ -233,7 +246,8 @@ set wildcharm=<C-Z> " Works exactly as wildchar, but inside macro
                     " Use in mappings to automatically invoke completion mode
                     " e.g. ':cnoremap ss so $vim/session/*.vim<C-Z>'
                     " Use CTRL-P for previous and CTRL-N for next choice.
-set wildignore=*.o,*.obj,*~,*.pyc,*.bak,*.class,*.cache
+set wildignore=*.o,*.obj,*~,*.bak,*.class,*.cache
+set wildignore+=*.pyc,__pycache__,*.pyo
 set wildignore+=*.swp,*.dll,tags
                     " ignore file matching given patterns when expanding wildcards
 set wildignorecase
@@ -387,9 +401,11 @@ cnoremap lg !ls -AF *<C-Z>
 map <leader>g :YcmCompleter GoToDefinitionElseDeclaration<cr>
                     " Define a shortcut for YCM goto definition
 
-map <Leader>vpu :term sh -c "for p in ~/.vim/pack/plugins/{opt,start}/*; do if [ -n \"$(\ls -A $(dirname \"$p\"))\" ]; then echo \"$p\" ; git -C \"$p\" pull --recurse-submodules; fi; done"<CR>
+map <Leader>vpu :term sh -c "for dirn in ~/.vim/pack/plugins/{opt,start}; do if [ -n \"$(ls -A $dirn)\" ]; then for p in \"$dirn\"/*; do echo \"$p\" && git -C \"$p\" pull --recurse-submodules; done; fi; done"<CR>
+"map <Leader>vpu :term sh -c "for p in ~/.vim/pack/plugins/{opt,start}/*; do if [ -n \"$(\ls -A $(dirname \"$p\"))\" ]; then echo \"$p\" ; git -C \"$p\" pull --recurse-submodules; fi; done"<CR>
 "map <Leader>vpu :term sh -c "for p in ~/.vim/pack/plugins/{start,opt}/*; do echo \"$p\" ; git -C \"$p\" pull; done"<CR>
                     " `vim plugins update' for git-repo update
+                    "   Last edit: 2020.04.30 at 12:00:44 [ckb]
 "}}}1
 
 " =========================
@@ -736,7 +752,7 @@ set laststatus=2
 "}}}1
 
 " =========================
-" Colors   {{{1
+" Colors + cursor style {{{1
 " =========================
 "syntax on          " Enable syntax highlighting using vim default highlight colors.
                     " By default 'syntax on' also turns on filetype detection.
@@ -756,7 +772,7 @@ set termguicolors
                     " Instead, use all available terminal colors.
                     " Set BEFORE color scheme below.
 
-" Color themes  "{{{2
+" ---- Color themes  "{{{2
 " See available color schemes in $VIMRUNTIME/colors/,
 " currently at /usr/share/vim/vim81/colors/ (for vim v8.1)
 ":color default
@@ -790,7 +806,7 @@ endif
                     " Include, Debug, ErrorMsg, Folded, Todo ('TODO','FIXME','XXX'), etc.
                     " (see http://vimdoc.sourceforge.net/htmldoc/syntax.html#xterm-color)
 
-" Key=Value pairs   "{{{2
+" ---- Color Key=Value pairs   "{{{2
 "           cterm=    underline | bold | none | reverse | italic
 " ctermfg,ctermbg=    NR-16   NR-8    COLOR NAME
 "                       0       0       Black
@@ -819,10 +835,6 @@ hi Normal ctermbg=Black guibg=#222222
                     " Override 'Comment' group's color
                     " Note: all but any one 'key=value' pair optional
 
-set cursorline
-hi CursorLine term=bold cterm=bold ctermbg=Black guibg=#000000
-                    " Set cursor line highlight preferences
-
 hi clear SignColumn
 hi SignColumn cterm=none ctermbg=Black guibg=#222222
 
@@ -833,7 +845,7 @@ hi NonAscii cterm=none ctermbg=Black ctermfg=Red
                     " guibg=Black guifg=Red
 augroup hlNonAscii
     autocmd!
-    autocmd BufReadPost * if  count(['vim','python'],&filetype)
+    autocmd BufReadPost * if  count(['vim','python','sh'],&filetype)
         \ | syntax match NonAscii "[^\u0000-\u007F]"  containedin=ALL
         \ | endif
 "   autocmd BufRead *.vim syntax match NonAscii "[^\u0000-\u007F]"  containedin=ALL
@@ -842,6 +854,12 @@ augroup hlNonAscii
                     " Highlight non ASCII characters in Vim
                     " In ex mode, to find non ASCIIs: /[^[:alnum:][:punct:][:space:]]/
 augroup END
+
+set cursorline      " Highlight current line (where cursor is)
+hi CursorLine term=bold cterm=bold ctermbg=Black guibg=#000000
+                    " Set cursor line highlight preferences
+
+                    " Set cursor shape, blink rate and highlight preferences
 "1}}}
 
 " ========================
@@ -1019,16 +1037,6 @@ augroup END    "}}}2
 " =========================
 set undodir=~/.vim/undodir
 set undofile
-"}}}1
-
-" =========================
-" Buffer swap, backup, write-backup files, temporary working directory  {{{1
-" =========================
-set noswapfile      " disable swap for vim buffers
-set nobackup        " don't make ~ file backups
-set writebackup     " save a temporary backup of file(s) being edited with vim
-set backupdir=~/.vim/backups
-set directory=~/.vim/tmp
 "}}}1
 
 " =========================
