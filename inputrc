@@ -1,19 +1,38 @@
 $include /etc/inputrc
-# user must be part of the `wheel` group for above line to be effective
+# User must be part of the `wheel` group for above line to be effective
+# Lines beginning with `$' indicate conditional constructs.
 
-# customize Readline’s key bindings and make them whatever you like. 
-# Readline reads ~/.inputrc file on startup 
+# Customize Readline’s key bindings and make them whatever you like.
+# Readline reads INPUTRC=~/.inputrc file on startup, given env-var
+# INPUTRC is properly set in ~/.bash_profile, or in ~/.profile .
 
 set show-all-if-unmodified on
 set editing-mode vi
 #set echo-control-characters off
 
-#set show-mode-in-prompt on
-#set vi-ins-mode-string \1\e[6 q\2
-#set vi-cmd-mode-string \1\e[2 q\2
+## Mode config
+set show-mode-in-prompt on
+# vi insert mode has a blinking underscore as cursor
+# default: prompt is prefixed with '(ins)'
+set vi-ins-mode-string "+"\1\e[3 q\2
+# vi normal/cmd mode has a blinking I beam as cursor; i
+# default: prompt is prefixed with '(cmd)'
+set vi-cmd-mode-string ":"\1\e[5 q\2
 
-# macro for key binding: 
+# CSI cursor style options '\e[<Ps>' for term w/ DECSCURSR support
+# Supported by 'tmux' if 'set TERM=xterm-256color' in shell environment
+# Source: https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Functions-using-CSI-_-ordered-by-the-final-character_s_
+#   Ps = 0  -> blinking block.
+#   Ps = 1  -> blinking block (default).
+#   Ps = 2  -> steady block.
+#   Ps = 3  -> blinking underline.
+#   Ps = 4  -> steady underline.
+#   Ps = 5  -> blinking bar (xterm).
+#   Ps = 6  -> steady bar (xterm).
+# Surround options with \1...\2 to comply with readline syntax requirements
+# Color can be added too: e.g. 'set vi-cmd-mode-string "\1\e[1;31m\2:\1\e[0m\2"'
 
+## Macro for key binding:
 # Ctrl+S: insert $(...)
 #  Move to line begin with Ctrl+A ,put `$(` there.
 #  Move to end of line with Ctrl+E then put `)` there.

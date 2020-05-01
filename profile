@@ -12,6 +12,12 @@
 # `~/.profile`.  This is recommended because when defining environmental variables only
 # in `~/.bash_profile` only the `bash` shell has access to them.
 
+# ###############
+# Readline startup file
+# ###############
+# Handle reading input when in interactive shell
+INPUTRC="$HOME"/.inputrc; export INPUTRC     # default: ~/.inputrc
+
 # #########
 # LANG
 # #########
@@ -87,7 +93,7 @@ PROJECT_HOME="${HOME}"/Documents/Work/Data-science; export PROJECT_HOME
 
 PATH=$PATH:/opt/bin:/opt/scripts
 PATH=$PATH:"${HOME}"/Documents/Scripts # use $HOME/ instead of ~/ for portability
-#PATH=$PATH:"$HOME"/anaconda2/bin    # AWS cli setup, also by Anaconda2 4.3.1 installer
+#PATH=$PATH:"$HOME"/anaconda2/bin      # AWS cli setup, also by Anaconda2 4.3.1 installer
 PATH=$PATH:"$HADOOP_HOME"/bin
 PATH=$PATH:"$SPARK_HOME"/bin
 PATH=$PATH:"$PYENV_ROOT"/bin
@@ -95,10 +101,10 @@ PATH=$PATH:"$PYENV_ROOT"/bin
 # #########
 # PATH CLEANING
 # #########
-PATH=$(pathclean PATH "$PATH")
+PATH=$(/opt/scripts/pathclean PATH "$PATH")
 export PATH             # only necessary for the old Bourne shell.
 
-PYTHONPATH=$(pathclean PYTHONPATH "$PYTHONPATH")
+PYTHONPATH=$(/opt/scripts/pathclean PYTHONPATH "$PYTHONPATH")
 export PYTHONPATH       # only necessary for the old Bourne shell.
 
 # Make sure that systemd is made aware of custom PATHs.
