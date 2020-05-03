@@ -6,11 +6,12 @@ This repository, at local repo's directory level `~/.dotfiles', contains:
     .bash_aliases
     .bash_profile
     .bash_logout
+    .profile
     .inputrc
-    .pyrc
     .gitconfig
     .tmux.conf
     .vimrc
+    .pyrc
     .pylintrc
     .forward
     .wget-hsts

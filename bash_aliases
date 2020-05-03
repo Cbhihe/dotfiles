@@ -429,6 +429,12 @@ alias pythonpath='python -c "import sys; print('\''\n'\''.join(sys.path))"'
 
 #
 # =============================
+# UDEV
+alias reloadudev='sudo udevadm control --reload-rules'
+alias triggerudev='sudo udevadm trigger'
+
+#
+# =============================
 # DEBIAN-BASED LINUX
 
 # alias setswap='printf "%s" "Current session swappiness set to: "; sudo sysctl vm.swappiness=$1'

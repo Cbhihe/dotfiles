@@ -6,6 +6,13 @@ $include /etc/inputrc
 # Readline reads INPUTRC=~/.inputrc file on startup, given env-var
 # INPUTRC is properly set in ~/.bash_profile, or in ~/.profile .
 
+# Examples of ~/.inputrc are at:
+# https://www.softpanorama.org/Scripting/Shellorama/Bash_as_command_interpreter/inputrc.shtml
+# Common key sequences are:
+# \C-<key>   Control key prefix
+# \M-<key>   Meta (Escape) key prefix
+# \e<key>    The escape character
+
 set show-all-if-unmodified on
 set editing-mode vi
 #set echo-control-characters off
@@ -40,3 +47,43 @@ set vi-cmd-mode-string ":"\1\e[5 q\2
 
 # Alt+S: prefix cmd line with `sudo` and place cursor at end of line.
 "\es": "\C-asudo \C-e"
+
+# Section below obtained from terminal
+#  $ bind -p | grep -v -e "(not bound)" -e "self-insert$" >> ~/.inputrc
+"\C-j": accept-line
+"\C-m": accept-line
+"\eOD": backward-char
+"\e[D": backward-char
+"\C-h": backward-delete-char
+"\C-?": backward-delete-char
+"\e[1;3D": backward-word
+"\e[1;5D": backward-word
+"\eOH": beginning-of-line
+"\e[1~": beginning-of-line
+"\e[H": beginning-of-line
+"\e[200~": bracketed-paste-begin
+"\C-i": complete
+"\e[3~": delete-char
+"\eOF": end-of-line
+"\e[4~": end-of-line
+"\e[F": end-of-line
+"\eOC": forward-char
+"\e[C": forward-char
+"\e[1;3C": forward-word
+"\e[1;5C": forward-word
+"\e[3;5~": kill-word
+"\C-n": menu-complete
+"\C-p": menu-complete-backward
+"\eOB": next-history
+"\e[B": next-history
+"\e[2~": overwrite-mode
+"\eOA": previous-history
+"\e[A": previous-history
+"\C-v": quoted-insert
+"\C-r": reverse-search-history
+"\C-t": transpose-chars
+"\C-u": unix-line-discard
+"\C-d": vi-eof-maybe
+"\e": vi-movement-mode
+"\C-w": vi-unix-word-rubout
+"\C-y": yank

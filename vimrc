@@ -143,8 +143,8 @@ let g:rmd_include_html = 1
 " General settings   {{{1
 " =========================
 set path+=**        " Default: 'path=.,/usr/include,,'
-                    " Define directories to be searched when 'gf', '[f',i
-                    " ']f', ':find', ':sfind', ':tabfind', etc. are used.
+                    " Define directories to be searched when 'gf', '[f',
+                    " ']f', ':find', ':sfind', ':tabfind', etc are used.
                     " '**' searches downwards 30 dir levels by default.
 set noerrorbells    " Turn off audible error bells
 set visualbell
