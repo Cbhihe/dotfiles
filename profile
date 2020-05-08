@@ -94,6 +94,7 @@ PROJECT_HOME="${HOME}"/Documents/Work/Data-science; export PROJECT_HOME
 PATH=$PATH:/opt/bin:/opt/scripts
 PATH=$PATH:"${HOME}"/Documents/Scripts # use $HOME/ instead of ~/ for portability
 #PATH=$PATH:"$HOME"/anaconda2/bin      # AWS cli setup, also by Anaconda2 4.3.1 installer
+PATH=$PATH:"${HOME}"/.local/bin
 PATH=$PATH:"$HADOOP_HOME"/bin
 PATH=$PATH:"$SPARK_HOME"/bin
 PATH=$PATH:"$PYENV_ROOT"/bin

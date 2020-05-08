@@ -172,27 +172,11 @@ alias grpmbr='groupmember'
 # alias below aplies to erl v16.b3
 # alias erlg='erl -s toolbar' # start erlang with toolbar GUI applet
 
-function nicMacAddress () {
-    awk '{print $2,$(NF-2)}' <(ip -o link)
-}
-alias nicmac='nicMacAddress'
-
 alias battery='watch -n0 cat /sys/class/power_supply/BAT0/capacity'
                 # display battery charge info in real time
 alias swinfo='lsb_release -cd; printf "%s\t\t%s\n" "Kernel:" "$(uname -rsi)"'
                                         # prints distro specific info
-alias portinfo='netstat -tulanp'        # quickly list all TCP/UDP ports on $HOST
-                # -t for "tcp" port
-                # -u for "udp" port
-                # -l for "listening" port
-                # -a for "all"
-                # -n for "numeric"
-                # -p for "program"
 alias cpuinfo='lscpu'                   # all info about the CPU
-alias ipinfo1='wget http://ipinfo.io/ip -qO -'
-alias ipinfo2='curl -s checkip.dyndns.org | sed -e "s/.*Current IP Address: //" -e "s/<.*$//"'
-alias ipinfo3='curl -s ifconfig.co'     # displays plain unproxied ip
-
 alias hwinfo='sudo dmidecode -q > ~/Documents/Backups/hw-profile.txt; printf "%s\n" "Hardware profile in file: ~/Documents/Backups/hw-profile.txt"'
 alias bioinfo='sudo dmidecode --type 0'  # requires sudo passwd
 alias meminfo='sudo dmidecode --type 17' # requires sudo passwd
@@ -290,14 +274,34 @@ alias wifiscan='sudo /usr/bin/iw wifi0 scan | grep SSID'
 alias scanwifi='sudo /usr/bin/wpa_cli -i wifi0 scan_results'
 
 function whereisip() {
-    # finds where an IP's exit node is located
+    # find where an IP's exit node is located
     [ $# != 1 ] && printf "\nPlease provide exactly one IP address as argument.\n\n" && return
     curl ipinfo.io/"$1"
     printf "\n"
 }
 
-# finds where my own external IP's exit node is located
-alias myip='curl ipinfo.io/"$(curl -s icanhazip.com)";printf "\n"'
+# find where my own external IP's exit node is located
+# display plain unproxied ip
+alias ipinfo1='wget http://ipinfo.io/ip -qO -'
+alias ipinfo2='curl -s checkip.dyndns.org | sed -e "s/.*Current IP Address: //" -e "s/<.*$//"'
+alias ipinfo3='curl -s ifconfig.co'   # also: 'ifonfig.co/json', 'ifconfig.co/country'
+alias ipinfo4='curl -4 icanhazip.com'
+alias ipinfo5='curl ipinfo.io/"$(curl -s icanhazip.com)";printf "\n"'
+
+# display network interface card's MAC
+function nicMacAddress () {
+    awk '{print $2,$(NF-2)}' <(ip -o link) 
+}
+alias nicmac='nicMacAddress'
+
+# quickly list all TCP/UDP ports on $HOST
+alias portinfo='netstat -tulanp'
+                # -t for "tcp" port
+                # -u for "udp" port
+                # -l for "listening" port
+                # -a for "all"
+                # -n for "numeric"
+                # -p for "program"
 
 function expandurl() {
     # expands shortened url

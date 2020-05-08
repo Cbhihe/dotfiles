@@ -4,8 +4,8 @@
 " Last edit: 2020.04.19 at 17:21:13 [ckb]
 
 set encoding=utf-8
-scriptencoding utf-8
 set termencoding=utf-8
+scriptencoding utf-8
 "set nocompatible       " Superfluous: vim automatically sets nocompatible if it finds
                        " ~/.vimrc or gvimrc " at startup
 
@@ -406,6 +406,30 @@ map <Leader>vpu :term sh -c "for dirn in ~/.vim/pack/plugins/{opt,start}; do if 
 "map <Leader>vpu :term sh -c "for p in ~/.vim/pack/plugins/{start,opt}/*; do echo \"$p\" ; git -C \"$p\" pull; done"<CR>
                     " `vim plugins update' for git-repo update
                     "   Last edit: 2020.04.30 at 12:00:44 [ckb]
+
+
+"nnoremap <expr> n 'Nn'[v:searchforward]
+"nnoremap <expr> N 'nN'[v:searchforward]
+                    " make n always search forward and N backward
+
+nnoremap <expr> ; getcharsearch().forward ? ';' : ','
+nnoremap <expr> , getcharsearch().forward ? ',' : ';'
+                    " make ; always "find" forward and , backward
+
+nnoremap Y y$
+                    " make Y consistent with C and D.
+                    " yank text from position till eol.
+
+nnoremap J }
+nnoremap K {
+nnoremap L g_
+nnoremap H ^
+                    " make J, K, L, and H move the cursor MORE.
+
+onoremap ge :execute "normal! " . v:count1 . "ge<space>"<cr>
+                    " make commands with ge consistent with b and w
+
+
 "}}}1
 
 " =========================

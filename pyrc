@@ -5,8 +5,11 @@ to start the python interpreter console with basic
 cmd definitions
 '''
 
+# Usage: launch python shell with `/usr/bin/python3 -i .pyrc`
+
 import os
 import sys
+
 
 class clear(object):
     '''
@@ -27,17 +30,23 @@ class exit(object):
     something to exit the python interpreter console
     usage: >>> exit
     '''
-    exit = exit # original object
+    exit = exit     # original object
+
     def __repr__(self):
         self.exit() # call original
         return ''
 
-quit = exit = exit()
+
+quit = q = exit = exit()
 
 
 class Prompt:
+    '''
+    define python shell prompt
+    '''
     def __str__(self):
         return '%s >>> ' % os.getcwd()
+
 
 sys.ps1 = Prompt()
 del sys
