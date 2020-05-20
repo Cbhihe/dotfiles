@@ -394,7 +394,7 @@ sshaws() {
 }
 #
 # CLI ENVIRONMENT VARIABLES
-# test for the existence of ~/.aws/{config,credentials} filesi, before
+# test for the existence of ~/.aws/{config,credentials} files, before
 # export of AWS env variables
 if [ -f "$HOME"/.aws/credentials ]; then
     parsefile="$HOME"/.aws/credentials
@@ -410,7 +410,7 @@ if [ -f "$HOME"/.aws/config ]; then
 fi
 #
 # set up cmd completion for AWS CLI
-complete -C '/home/ckb/anaconda2/bin/aws_completer' aws
+#complete -C '/home/ckb/anaconda2/bin/aws_completer' aws
 
 #
 # =============================

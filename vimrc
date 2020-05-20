@@ -420,15 +420,17 @@ nnoremap Y y$
                     " make Y consistent with C and D.
                     " yank text from position till eol.
 
-nnoremap J }
-nnoremap K {
+"#nnoremap J }
+"nnoremap K {
 nnoremap L g_
 nnoremap H ^
-                    " make J, K, L, and H move the cursor MORE.
+                    " make L, H move the cursor MORE.
 
 onoremap ge :execute "normal! " . v:count1 . "ge<space>"<cr>
                     " make commands with ge consistent with b and w
 
+cnoremap w!! !sudo cat > "%"
+                    " force saving files that require root permission
 
 "}}}1
 
