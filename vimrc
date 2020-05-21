@@ -333,7 +333,7 @@ nnoremap <Leader>b :set nomore <Bar> :ls <Bar> :set more <cr>:b<Space>
                     " List active buffers, prepare to switch to one
                     " either with buffer's partial name +TAB or with
                     " buffer number
-map <space> /
+"map <space> /
                     " (normal/command, visual, select, operator-pending modes)
                     " Map <space> to forward search (/) in active window
 "map <C-space> ?
@@ -492,7 +492,7 @@ let g:python_recommended_style = 0
                 " (in particular 'tabstop=8')
 
 " ==== Syntastic configuration
-let g:syntastic_shell = '/usr/bin/bash'
+let g:syntastic_shell = '/bin/bash'
                 " Specify shell which accepts Bourne compatible syntax
 let g:syntastic_always_populate_loc_list = 1
                 " Default: 0
@@ -622,10 +622,10 @@ let g:syntastic_fortran_checkers = ['gfortran']
 let g:syntastic_php_checkers = ['php', 'phplint']
                 " 'phplint' not installed as of 2018.10.18
 
-"lklflf  ñfdf
+
 let g:syntastic_html_checkers = ['tidy']
                 " Install with pacman
-"123lklflf  ñfdf
+
 let g:syntastic_vim_checkers = ['vint', 'vimlint', 'vimlparser']
                 " Obtained directly from Github.com
                 " vint installed from AUR is located at /usr/bin/vint
