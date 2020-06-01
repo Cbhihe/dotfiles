@@ -1,2 +1,18 @@
+# KEY bindings
+#   File: ~/.xbindkeysrc
+
+# After changes, reload file configuration and apply changes.
+#    $ xbindkeys --poll-rc
+
+# To find keycodes:
+#    $ xbindkeys --key         # to grab the keycode of one key
+#    $ xbindkeys --multikey    # to grab the keycode of multiple keys
+
+
+# Toggle mouse-pad on/off
 "(/opt/scripts/toggle_touchpad.sh &)"
-	Control+Mod4 + p + Release
+    Control+Mod4 + p + Release
+
+# send cursor selection to ibrowser's startpageA search field and execute the search
+"(/opt/scripts/startpage_that.sh &)"
+    Control+Mod4 + s + Release

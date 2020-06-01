@@ -45,7 +45,7 @@ HISTFILE=$HOME/.bash_history    # Default
 HISTTIMEFORMAT='%F %T - '; export HISTTIMEFORMAT
 #HISTTIMEFORMAT="%Y%m%d %T - "
 # Ignore specific commands (full length match)
-HISTIGNORE="?:cd:ls:ll:bg:fg:vim:git status"
+HISTIGNORE="?:cd:ls:ll:bg:fg:cdv:lsa:h:hi:his:hist:history"
 HISTSIZE=300                    # Default: 500
 HISTFILESIZE=1200               # Default: HISTZISE
 HISTCONTROL=ignoreboth
