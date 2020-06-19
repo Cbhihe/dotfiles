@@ -370,8 +370,8 @@ function gitcom() {
 alias gitloglast='for branch in $(git branch -r | grep -v HEAD);do echo -e $(git show --format="%ci %cr" $branch | head -n 1) \\t$branch; done | sort -r'
 #alias gitlog='git log --pretty=format:"%>(9)%Cgreen%h%Creset: Author: %Cblue%an%Creset | Committer: %Cblue%cn%Creset | Time: %ad%n         Commit note: %s" --graph --date=format:"%Y-%M-%d %H:%m:%S"'
 # Show git log with commit time-stamp and note
-alias gitlog='git log --all --full-history --color --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd)%Creset A:%C(bold blue)<%an>%Creset C:%C(bold blue)<%cn>%Creset" --abbrev-commit --date=format:"%Y.%m.%d-%H:%M"'
-#alias gitlog='git log --pretty=format:"%Cgreen%h%Creset: Author: %Cblue%an%Creset | Committer: %Cblue%cn%Creset | Commit time: %cd%n         Commit note: %s" --graph --date=format:"%Y-%m-%d %H:%M:%S"'
+alias gitlog='git log --all --full-history --color --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd)%Creset A:%C(bold blue)<%an>%Creset C:%C(bold blue)<%cn>%Creset" --abbrev-commit --date=format:"%Y%m%d-%H:%M"'
+#alias gitlog='git log --pretty=format:"%Cgreen%h%Creset: Author: %Cblue%an%Creset | Committer: %Cblue%cn%Creset | Commit time: %cd%n         Commit note: %s" --graph --date=format:"%Y%m%d %H%M%S"'
 #alias gitlog='git log --color=always --pretty=format:"%h: %an-%cn %cr: %s" --graph | less -WN'
 
 # =============================

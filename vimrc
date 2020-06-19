@@ -119,6 +119,7 @@ if &loadplugins
         packadd! lintr
         packadd! youcompleteme
         packadd! latex-suite-aka-vim-latex
+        packadd! syntastic-local-eslint.vim
         "packadd! vim-chef
     else
         " Automatic loading of *.vim files in ~/vim/pack/plugins/start/
@@ -256,6 +257,13 @@ set wildmode=longest,list
                     " When more than 1 match occurs, list all matches
                     " and complete till longest common string, then list
                     " alternatives.
+augroup prettyJS
+    autocmd!
+    autocmd FileType javascript set formatprg=/usr/bin/prettier
+                    " let `prettier'  take over formatting whenever js
+                    " is detected. formatprg (fp) defaults to which means C
+                    " formatting.
+augroup END
 "}}}1
 
 " =========================
@@ -567,7 +575,7 @@ let g:syntastic_filetype_map = {
 
 let g:syntastic_mode_map = {
     \ 'mode': 'active',
-    \ 'active_filetypes': ['python','c','cpp','r','perl','sh','php','erlang','vim','sql','tex'],
+    \ 'active_filetypes': ['python','c','cpp','r','perl','sh','php','erlang','vim','sql','tex','javascript'],
     \ 'passive_filetypes': ['chef', 'puppet']}
                 " Enable selective active mode when passive mode is activated
                 " in local buffer, with: ':SyntasticToggleMode'
@@ -591,6 +599,11 @@ let g:syntastic_mode_map = {
 " See available checkers with ':h syntastic-checkers' in vim buffer
 " ----------------------------
 let g:syntastic_extra_filetypes = ['make', 'gitcommit']
+
+let g:syntastic_javascript_checkers = ['eslint'] ", 'jshint']
+                " 'javascript' linter
+                " 'eslint' is perhaps more adequate for React
+                " while 'jshint' is more geared toward javascript
 
 let g:syntastic_java_checkers = []
                 " Manual disabling of Syntastic Java diagnostics
