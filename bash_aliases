@@ -12,9 +12,7 @@
 # shortcut to reload .bashrc and .bash_aliases after editing aliases
 alias aliases='vim "$HOME"/.bash_aliases; source "$HOME"/.bash_aliases'
 
-alias crontab='\crontab -i'
-alias lsblk='\lsblk -o +UUID'
-
+# History aliases  {{{1
 alias history='\history 300'            # default
 alias histor='\history 150'
 alias histo='\history 75'
@@ -22,11 +20,11 @@ alias hist='\history 55'
 alias his='\history 35'
 alias hi='\history 25'
 alias h='\history 15'
+#  }}}1
 
-
+# Common aliases    {{{1
 # test for color db for ls and define env-var LS_COLORS
 if [ -x /usr/bin/dircolors ]; then
-
     colopt="color=auto"
 
     if [ -r ~/.dircolors ] ; then
@@ -57,9 +55,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
 #   alias egrep='egrep --color=auto'     # deprecated
 else
-
     colopt=""
-
     alias ls='\ls -F'                   # option -F to classify with */=>@|
     alias la='\ls -A'                   # list "almost all"
     alias lsa='\ls -AF'
@@ -70,17 +66,8 @@ else
     alias vdir='vdir -AF'               # equal to '\ls -l -b -AF'
 fi
 
-cdv () {
-    # change dir + list target content
-    case x"$1" in
-        "x")
-            #cd || exit ; \ls -AF --color=auto;;
-            cd || return; \ls -AF --$colopt ;;
-        *)
-             [ -d "$1" ] &&  cd "$1" && \ls -AF --$colopt ;; #|| echo Not a directory.;;
-    esac
-        }
-
+alias crontab='\crontab -i'
+alias lsblk='\lsblk -o +UUID'
 #alias less='\less -R'                   # maintain screen appearance in presence
                                         #+ of ANSI "color" ecape sequences of type
                                         #+ 'ESC [ ... m`  where ... are zero or more
@@ -91,8 +78,9 @@ alias cdp='cd -P'                       # use physical directory structure,
 
 alias j='jobs -l'                       # option -l shows PID
 #alias cat='cat -n'                      # Number all output lines
-                    # Conflicts with 'pyenvvirtualenvwrapper' script and 'workon' cmd.
-                    #  [ckb] 2019.04.18 at 20:21:52 CEST
+                                        # conflicts with 'pyenvvirtualenvwrapper' script
+                                        # and 'workon' cmd.
+                                        # [ckb] 2019.04.18 at 20:21:52 CEST
 alias c='clear'
 alias cl='clear'
 alias claer='clear; echo "$(uname) assumed that command \clear\ was meant."'
@@ -101,11 +89,127 @@ alias calc='bc -lq'                     #+ standard math library in quiet mode.
 
 alias ps='\ps -eF --headers | less'
 alias pstopcpu='\ps -auxf | sort -nr -k 4 | head -10'
-# list ps while avoiding matching the 'grep' command line itself
+
+# Screenshot
+alias sshoot='/opt/scripts/screen-capture'
+                                    # access to gnome-screenshot script
+                                    # with custom save folder
+# Safety nets
+set -o noclobber                    # disallow clobbering file with output redirection '>'
+alias ln='ln -i'
+alias mv='mv -i'
+alias cp='cp -i'
+alias rm='rm -i --preserve-root'    # with -I flag, only asks when removing
+                                    # 3 or more files
+alias chown='chown --preserve-root'
+alias chmod='chmod --preserve-root'
+alias chgrp='chgrp --preserve-root' # change group
+
+alias df='df -kP'                   # check available space on volume of
+                                    # named directory by default check all
+                                    # mounted volumes
+
+# alias cpprogress='rsync --progress -ravz'
+                                    # cp with progress bar ??
+# alias asuf='cp "$1" "$1""$2"'     # needs work
+
+alias nocomment='grep -Ev '\''(#|$)'\'''
+                                    # filter out comments in a grepped file
+
+#  1}}}
+
+#  System + Hardware info aliases   {{{1
+alias battery='watch -n0 cat /sys/class/power_supply/BAT0/capacity'
+                # display battery charge info in real time
+alias swinfo='lsb_release -cd; printf "%s\t\t%s\n" "Kernel:" "$(uname -rsi)"'
+                                        # prints distro specific info
+alias cpuinfo='lscpu'                   # all info about the CPU
+alias hwinfo='sudo dmidecode -q > ~/Documents/Backups/hw-profile.txt; printf "%s\n" "Hardware profile in file: ~/Documents/Backups/hw-profile.txt"'
+alias bioinfo='sudo dmidecode --type 0'  # requires sudo passwd
+alias meminfo='sudo dmidecode --type 17' # requires sudo passwd
+alias gpuinfo='lspci -k | grep -EA2 "VGA|3D"'
+
+# send 'dmesg' content to pastebin
+#    'curl -F': curl POSTs data as a filled form using the Content-Type multipart/form-data
+#    ' <- ' when file-name is prefixed with '<' the file is actually treated as its text content
+#       as obtained from stdin '-'
+alias dmesg2bin='/usr/bin/dmesg | /usr/bin/curl -F "f:1=<-" ix.io'
+
+# send 'journalctl -b' content to pastebin
+alias bootjournal2bin='sudo /usr/bin/journalctl -b | /usr/bin/curl -F '\''f:1=<-'\'' ix.io'
+
+# Alert about long running commands.
+# Usage: '$ sleep 10; alert '
+alias alert='notify-send --urgency=low -i "$([ $? -eq 0 ] && echo terminal || echo error)" "$(history|tail -n1 | sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\''\)"'
+
+# Swappiness tweaking
+# Default value of swappiness=60 means kernel starts swapping when RAM use
+#+ hits 40% of available RAM capacity
+# current session swappiness
+alias swapinfo='printf "%s" "Current session swappiness is "; \cat /proc/sys/vm/swappiness'
+# set swappiness for session
+#alias setswap='printf "%s" "Current session swappiness set to: "; sudo ...=$1'
+
+alias halt='sudo halt'              # halt processes and machine with no
+alias reboot='sudo /sbin/shutdown -r'
+                                    # arg is either "now" or an integer
+                                    # value in minutes; same as 'sudo reboot'
+alias shutdown='sudo /sbin/shutdown -h'
+                                    # arg as above
+#    1}}}
+
+# date aliases    {{{1
+alias datestamp='/usr/bin/date +%Y%m%d' # format yyyymmdd
+alias timestamp='/usr/bin/date +%H%M%S' # format hhmmss
+alias lastmod='/opt/bin/lastmod.sh' # last modif stamp by '$USER' (w/ CR)
+alias partmod='/opt/bin/partmod.sh' # partial modif stamp by '$USER' (w/o CR)
+alias scripthead='/opt/bin/scripthead.sh'
+                                    # script creation stamp
+alias date='/usr/bin/date | lolcat'
+#     1}}}}
+
+# vim  aliases   {{{1
+alias svi='sudo -e'
+alias svim='sudo -e'
+alias edit='vim'
+alias vimsi='vim "+set si"'         # vim with 'smartindent' option enabled
+                                    # Similarly 'set ai', (autoindent) offers a less
+                                    # sophisticated alternative to 'indentexpr' but
+                                    # works in case the file type being edited remains
+                                    # unrecognized
+#    1}}}
+
+# Erlang aliases    {{{1
+# aplies to v16.b3
+# alias erlg='erl -s toolbar' # start erlang with toolbar GUI applet
+#   1}}}
+
+# Change directory verbosely
+cdv () {
+    # change dir + list target content
+    case x"$1" in
+        "x")
+            #cd || exit ; \ls -AF --color=auto;;
+            cd || return; \ls -AF --"$colopt" ;;
+        *)
+             [ -d "$1" ] &&  cd "$1" && \ls -AF --"$colopt" ;; #|| echo Not a directory.;;
+    esac
+        }
+
+# Super 'ps'
 sps() {
+    # list ps while avoiding matching the 'grep' command line itself
     \ps aux | grep -E "$@" | grep -v 'grep';
 }
 
+# Disk space usage for non-root users
+function finduserspace () {
+    # print disk space usage for non-root users
+    awk -F: '/bash/ && /home/ {print "/home/"$1}' /etc/passwd | xargs -l sudo du -sm
+}
+alias userspace='finduserspace'
+
+# 'man' cmd overloading   {{{1
 # overload 'man' -- allow info on builtins in pseudo man-page format
 # Author: Radu Rädeanu in AU's question 439410
 function man () {
@@ -118,7 +222,9 @@ function man () {
         ;;
     esac
 }
+# 1}}}
 
+# 'umount' cmd overloading   {{{1
 # Overload `umount' -- allow unmounting in any situation
 # Only one parameter (mount point or device path) is allowed
 # Include special cases of 'root' user or lone option parameter
@@ -131,7 +237,9 @@ function umount () {
         /usr/bin/gvfs-mount -u "$1"
     fi
 }
+#    1}}}
 
+# Disable mousepad temporarily  {{{1
 # Disable Touchpad for given number of seconds
 function padoff () {
     if [ ! $# -eq 1 ] ; then
@@ -154,106 +262,26 @@ function padoff () {
         fi
     fi
 }
+#    1}}}
 
-# Enable pad
+# Enable mousepad    {{{1
 function padon () {
     ID_touchpad="$(cut -f1 < <(awk -F "=" '/Touchpad/ {print $2}' \
         < <(/usr/bin/xinput list)))"
     /usr/bin/xinput --enable "${ID_touchpad}"
     printf "Touchpad enabled.\\n"
 }
+# 1}}}
 
-# Display members of a group, where "group" is  provided as argument $1
+# Display members of a group   {{{1
+# "group" is  provided as argument $1
 function groupmember () {
     awk -F":" '{print $1, ": ", $4}' < <(grep -e "^${1}:.*" /etc/group)
 }
 alias grpmbr='groupmember'
+#   1}}}
 
-# alias below aplies to erl v16.b3
-# alias erlg='erl -s toolbar' # start erlang with toolbar GUI applet
-
-alias battery='watch -n0 cat /sys/class/power_supply/BAT0/capacity'
-                # display battery charge info in real time
-alias swinfo='lsb_release -cd; printf "%s\t\t%s\n" "Kernel:" "$(uname -rsi)"'
-                                        # prints distro specific info
-alias cpuinfo='lscpu'                   # all info about the CPU
-alias hwinfo='sudo dmidecode -q > ~/Documents/Backups/hw-profile.txt; printf "%s\n" "Hardware profile in file: ~/Documents/Backups/hw-profile.txt"'
-alias bioinfo='sudo dmidecode --type 0'  # requires sudo passwd
-alias meminfo='sudo dmidecode --type 17' # requires sudo passwd
-alias gpuinfo='lspci -k | grep -EA2 "VGA|3D"'
-
-# send 'dmesg' content to pastebin
-#    'curl -F': curl POSTs data as a filled form using the Content-Type multipart/form-data
-#    ' <- ' when file-name is prefixed with '<' the file is actually treated as its text content
-#       as obtained from stdin '-'
-alias dmesg2bin='/usr/bin/dmesg | /usr/bin/curl -F "f:1=<-" ix.io'
-
-# send 'journalctl -b' content to pastebin
-alias bootjournal2bin='sudo /usr/bin/journalctl -b | /usr/bin/curl -F '\''f:1=<-'\'' ix.io'
-
-function finduserspace () {
-    # print disk space usage for non-root users
-    awk -F: '/bash/ && /home/ {print "/home/"$1}' /etc/passwd | xargs -l sudo du -sm
-}
-alias userspace='finduserspace'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? -eq 0 ] && echo terminal || echo error)" "$(history|tail -n1 | sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\''\)"'
-
-
-## Swappiness tweaking
-# Default value of swappiness=60 means kernel starts swapping when RAM use
-#+ hits 40% of available RAM capacity
-## current session swappiness
-alias swapinfo='printf "%s" "Current session swappiness is "; \cat /proc/sys/vm/swappiness'
-# set swappiness for session
-#alias setswap='printf "%s" "Current session swappiness set to: "; sudo ...=$1'
-
-## Date
-alias datestamp='/usr/bin/date +%Y%m%d' # format yyyymmdd
-alias timestamp='/usr/bin/date +%H%M%S' # format hhmmss
-alias lastmod='/opt/bin/lastmod.sh' # last modif stamp by '$USER' (w/ CR)
-alias partmod='/opt/bin/partmod.sh' # partial modif stamp by '$USER' (w/o CR)
-alias scripthead='/opt/bin/scripthead.sh'
-                                    # script creation stamp
-alias date='/usr/bin/date | lolcat'
-
-## Screenshot
-alias sshoot='/opt/scripts/screen-capture'
-                                    # access to gnome-screenshot script
-                                    # with custom save folder
-
-## vim
-alias svi='sudo -e'
-alias svim='sudo -e'
-alias edit='vim'
-alias vimsi='vim "+set si"'         # vim with 'smartindent' option enabled
-                                    # Similarly 'set ai', (autoindent) offers a less
-                                    # sophisticated alternative to 'indentexpr' but
-                                    # works in case the file type being edited remains
-                                    # unrecognized
-
-## Safety nets
-set -o noclobber                    # disallow clobbering file with output redirection '>'
-alias ln='ln -i'
-alias mv='mv -i'
-alias cp='cp -i'
-alias rm='rm -i --preserve-root'    # with -I flag, only asks when removing
-                                    # 3 or more files
-alias chown='chown --preserve-root'
-alias chmod='chmod --preserve-root'
-alias chgrp='chgrp --preserve-root' # change group
-
-alias df='df -kP'                   # check available space on volume of
-                                    # named directory by default check all
-                                    # mounted volumes
-
-# alias cpprogress='rsync --progress -ravz'
-                                    # cp with progress bar ??
-# alias asuf='cp "$1" "$1""$2"'     # needs work
-
-## Cheatsheet
+# Bash + utility cheat sheet  {{{1
 function usage() {
     # yields usage examples for sought after cmds
     # accepts any number of cmd names as args
@@ -264,9 +292,9 @@ function usage() {
         cmd_name="$1"
     done
 }
+#    1}}}
 
-
-## Network
+# Network stuff    {{{1
 alias ping='\ping -c 5'
 
 # find available wlan networks in vicinity
@@ -314,18 +342,9 @@ function iswebup() {
     [ $# != 1 ] && printf "\nPlease provide exactly one web site as argument.\n\n" && return
     curl --head -s "$1" -L | grep HTTP/
 }
+#    1}}}
 
-## System
-alias halt='sudo halt'              # halt processes and machine with no
-alias reboot='sudo /sbin/shutdown -r'
-                                    # arg is either "now" or an integer
-                                    # value in minutes; same as 'sudo reboot'
-alias shutdown='sudo /sbin/shutdown -h'
-                                    # arg as above
-alias nocomment='grep -Ev '\''(#|$)'\'''
-                                    # filter out comments in a grepped file
-
-## Gadgets
+# Gadgets    {{{1
 function weather() {
     # prints weather forecast in plain text on screen
     [ $# != 1 ] && printf "\nPlease provide exactly one city name as argument.\n\n" && return
@@ -333,22 +352,18 @@ function weather() {
 }
 
 alias worldmap='telnet mapscii.me'
+#    1}}}
 
 # =====================================================================
-# PACKAGE OR ENVIRONMENT SPECIFIC SHORTCUTS AND FUNCTIONS
-#
+# PACKAGE/ENVIRONMENT SPECIFIC SHORTCUTS AND FUNCTIONS   {{{1
 
 # =============================
-# VENV
-alias vpython='python3 -m venv --system-site-packages --prompt VENV'
-#alias vpython='python3 -m venv --without-pip --system-site-packages --prompt VENV'
-
-# =============================
-# TMUX
+# TMUX   {{{2
 alias gtmux='~/.tmux/gnome-term-session.sh'
+#   2}}}
 
 # =============================
-# GITHUB
+# GITHUB    {{{2
 # staging function
 function gitsta() {
     case $1 in
@@ -367,23 +382,28 @@ function gitcom() {
     # "$*" makes all arguments to one
     git commit -m  "$*"
 }
-alias gitloglast='for branch in $(git branch -r | grep -v HEAD);do echo -e $(git show --format="%ci %cr" $branch | head -n 1) \\t$branch; done | sort -r'
+alias gitloglast='for branch in "$(git branch -r | grep -v HEAD)";do echo -e "$(git show --format="%ci %cr" "$branch" | head -n 1)" \\t"${branch}"; done | sort -r'
 #alias gitlog='git log --pretty=format:"%>(9)%Cgreen%h%Creset: Author: %Cblue%an%Creset | Committer: %Cblue%cn%Creset | Time: %ad%n         Commit note: %s" --graph --date=format:"%Y-%M-%d %H:%m:%S"'
 # Show git log with commit time-stamp and note
 alias gitlog='git log --all --full-history --color --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd)%Creset A:%C(bold blue)<%an>%Creset C:%C(bold blue)<%cn>%Creset" --abbrev-commit --date=format:"%Y%m%d-%H:%M"'
 #alias gitlog='git log --pretty=format:"%Cgreen%h%Creset: Author: %Cblue%an%Creset | Committer: %Cblue%cn%Creset | Commit time: %cd%n         Commit note: %s" --graph --date=format:"%Y%m%d %H%M%S"'
 #alias gitlog='git log --color=always --pretty=format:"%h: %an-%cn %cr: %s" --graph | less -WN'
+#     2}}}
 
 # =============================
-# TRIPWIRE
-alias twcfgbld='path="/mnt/TW_db-bin"; sudo twadmin -m F -c ${path}/tw.cfg -S ${path}/site.key ${path}/twcfg.txt'  # build and sign tw.cfg info coreutils 'groups invocation'
-alias twpolbld='path="/mnt/TW_db-bin"; sudo twadmin -m P -c ${path}/tw.cfg -p ${path}/tw.pol -S ${path}/site.key ${path}/twpol.txt'  # build and sign tw.pol
-alias twdbbld='path="/mnt/TW_db-bin"; sudo ${path}/tripwire -m i -c /tw.cfg -p ${path}/mnt/TW_db-bin/tw.pol -S ${path}/site.key -L ${path}/${HOSTNAME}-local.key -d ${path}/${HOSTNAME}.twd'  # initiate db w/ new tw.cfg and/or tw.pol files
-alias twiic='nowdir=$PWD; path="/mnt/TW_db-bin"; cd "${path}"; sudo tripwire -m c -c ${path}/tw.cfg -I; cd $nowdir'
+# TRIPWIRE    {{{2
+# build and sign tw.cfg info coreutils 'groups invocation'
+#alias twcfgbld='path="/mnt/TW_db-bin"; sudo twadmin -m F -c "${path}"/tw.cfg -S "${path}"/site.key "${path}"/twcfg.txt'
+# build and sign tw.pol
+#alias twpolbld='path="/mnt/TW_db-bin"; sudo twadmin -m P -c "${path}"/tw.cfg -p "${path}"/tw.pol -S "${path}"/site.key "${path}"/twpol.txt'
+# initiate db w/ new tw.cfg and/or tw.pol files
+#alias twdbbld='path="/mnt/TW_db-bin"; sudo ${path}/tripwire -m i -c /tw.cfg -p ${path}/mnt/TW_db-bin/tw.pol -S ${path}/site.key -L ${path}/${HOSTNAME}-local.key -d ${path}/${HOSTNAME}.twd'
+#alias twiic='sudo bash -c '\''nowdir="$PWD"; path="/mnt/TW_db-bin"; cd "${path}"; tripwire -m c -c "${path}"/tw.cfg -I; cd "$nowdir"\''
 # alias twdbupd='nowdir=$(pwd);cd /mnt/TW_db-bin/report; lastrpt=$(/bin/ls -1 *.twr | /usr/bin/tail -1); sudo tripwire -m u -a -c /mnt/TW_db-bin/tw.cfg -p /mnt/TW_db-bin/tw.pol -S /mnt/TW_db-bin/site.key -L /mnt/TW_db-bin/${HOSTNAME}-local.key -d /mnt/TW_db-bin/${HOSTNAME}.twd -r ${lastrpt}; cd $nowdir'  # automatic update db
+#    2}}}
 
 # =============================
-# AWS
+# AWS    {{{2
 sshaws() {
     printf "Connect to AWS instance %s@%s" "$1,$2\\n"
     ssh -i "$3" "$1"@"$2"
@@ -408,14 +428,14 @@ if [ -f "$HOME"/.aws/config ]; then
     AWS_DEFAULT_REGION=$(awk '/region/ {print $3}' "$parsefile")
     export AWS_DEFAULT_REGION
 fi
-#
+
 # set up cmd completion for AWS CLI
 #complete -C '/home/ckb/anaconda2/bin/aws_completer' aws
 
-#
-# =============================
-# ARCH LINUX
+#    2}}}
 
+# =============================
+# ARCH LINUX   {{{2
 alias aurvote='ssh aur@aur.archlinux.org vote'
 alias ifplugd='sudo systemctl start netctl-ifplugd@net0'
 alias upcvpn='sudo /usr/bin/openvpn --config /etc/openvpn/vpn.upc-fib-access.ovpn'
@@ -424,22 +444,26 @@ alias kubikawsbastion='ssh -i ca.pem/aws_kubikprivatekey.pem basetis@proxy.kubik
 alias upcssh='ssh bhihe@arvei.ac.upc.edu' # passwd: [usual_upc]
 alias paccacheclean='paccache -rk2'  # add '-u' to remove only uninstalled packages
 alias pacorphanclean='sudo pacman -Rns $(pacman -Qtdq)' # orphans' + conf files' recursive removal
+#    2}}}
 
-
-#
 # =============================
-# PYTHON
+# PYTHON    {{{2
 alias pythonpath='python -c "import sys; print('\''\n'\''.join(sys.path))"'
 
-#
+# VENV
+alias vpython='python3 -m venv --system-site-packages --prompt VENV'
+#alias vpython='python3 -m venv --without-pip --system-site-packages --prompt VENV'
+
+#   2}}}
+
 # =============================
-# UDEV
+# UDEV   {{{2
 alias reloadudev='sudo udevadm control --reload-rules'
 alias triggerudev='sudo udevadm trigger'
+#    2}}}
 
-#
 # =============================
-# DEBIAN-BASED LINUX
+# DEBIAN-BASED LINUX    {{{2
 
 # alias setswap='printf "%s" "Current session swappiness set to: "; sudo sysctl vm.swappiness=$1'
 
@@ -497,8 +521,13 @@ alias triggerudev='sudo udevadm trigger'
 #           awk -v RS= '/\nAuto-Installed: *1/ {printi $2}' |sort) >> "$ofile"
 #}
 #alias mpi2="mipinfo2"
+#    2}}}
 
-## UPC VPN connect / status / kill
+# =============================
+## UPC VPN connect / status / kill   {{{2
 #alias upcvpn='/usr/local/pulse/PulseClient.sh -h vpn.upc.edu -u sedric.bhihe -r Estudiants -U https://vpn.upc.edu'
 #alias upcvpnstat='/usr/local/pulse/PulseClient.sh -S'
 #alias upcvpnkill='/usr/local/pulse/PulseClient.sh -K'
+#    2}}}
+#    1}}}
+

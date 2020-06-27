@@ -10,17 +10,17 @@ scriptencoding utf-8
                        " ~/.vimrc or gvimrc " at startup
 
 " =========================
-" Sensitive content
+" sensitive content
 " =========================
 source ~/.vim/sensitive.vim
 
 " =========================
-" Function definitions
+" function definitions
 " =========================
 source ~/.vim/functions.vim
 
 " =========================
-" Plugins {{{1
+" plugins {{{1
 " =========================
 " :scriptnames
                 " check loaded plugins
@@ -30,11 +30,11 @@ source ~/.vim/functions.vim
                 " see syntastic's idea of env-var $path
 
 " ---- use with `vundlevim/vundle.vim'  {{{2
-" Lines commented with 3 double quotes can be activated by removing them,
+" lines commented with 3 double quotes can be activated by removing them,
 " while single quotes remain.
 
 """filetype off
-"""set rtp+=~/.vim/bundle/Vundle.vim
+"""set rtp+=~/.vim/bundle/vundle.vim
                 " set run-time path for vundle, required
 """call vundle#begin()
                 " initialize vundle, required
@@ -45,56 +45,56 @@ source ~/.vim/functions.vim
 "  'user/repository.git' format
 " for vim scripts: reference the plugin by name as it appears on site
 
-"""Plugin 'vundlevim/vundle.vim'
+"""plugin 'vundlevim/vundle.vim'
                 " let vundle manage vundle, required
-"""Plugin 'vim-syntastic/syntastic'
+"""plugin 'vim-syntastic/syntastic'
                 " syntax checker
-"""Plugin 'ycm-core/youcompleteme'
+"""plugin 'ycm-core/youcompleteme'
                 " compiled plugin 'youcompleteme.vim' in
                 " '/usr/share/vim/vimfiles/autoload'
-"""Plugin 'raimondi/delimitmate'
+"""plugin 'raimondi/delimitmate'
                 " replaces 'townk/vim-autoclose' below
                 " unlike 'townk/vim-autoclose' it takes syntax into account
                 " installed directly from plugins' repository
-"""Plugin 'dougireton/vim-chef'
+"""plugin 'dougireton/vim-chef'
                 " detects chef cookbook and chef-repo files and sets the filetype
                 " to 'ruby.chef'
-"""Plugin 'jimhester/lintr'
+"""plugin 'jimhester/lintr'
                 " detects syntax errors and inconsistencies in r scripts
                 " git-cloned from https://github.com/jimhester/lintr.git
-"""Plugin 'vim-scripts/latex-suite-aka-vim-latex'
+"""plugin 'vim-scripts/latex-suite-aka-vim-latex'
                 " located at
                 " https://github.com/vim-scripts/latex-suite-aka-vim-latex.git
-"""Plugin 'syngan/vim-vimlint'
+"""plugin 'syngan/vim-vimlint'
                 " located at https://github.com/syngan/vim-vimlint.git
                 " written in vim, hence very slow with syntastic
-"""Plugin 'ynkdir/vim-vimlparser'
+"""plugin 'ynkdir/vim-vimlparser'
                 " located at https://github.com/ynkdir/vim-vimlparser.git
-"""Plugin 'kuniwak/vint'
+"""plugin 'kuniwak/vint'
                 " cloned from https://github.com/kuniwak/vint  << deprecated
                 " or installed from aur as 'python-vint'  << ok
                 " can also be installed via '/usr/bin/python3 -m pip install ...'
 
 " ---- disabled vundle-managed plugins   {{{3
 " ====================================
-"Plugin 'Vimjas/vint'
-                " located at https://github.com/Vimjas/vint
-                " vim script Language Lint implemented in Python
+"plugin 'vimjas/vint'
+                " located at https://github.com/vimjas/vint
+                " vim script language lint implemented in python
                 " installed on 2020.04.18 to replace 'kunivak/vint'
-                " Not maintained any longer
-"Plugin 'dbakker/vim-lint'
+                " not maintained any longer
+"plugin 'dbakker/vim-lint'
                 " located at https://github.com/dbakker/vim-lint.git
-                " Not maintained any longer
-"Plugin 'townk/vim-autoclose'
-                " Create pairs of (,{,[,",` and ' automatically.
-                " Place cursor between them automatically.
-                " Delete with one keystroke by doing bs on first sign .
-                " Suppress creation of closing sign, by typing ctrl-v in
+                " not maintained any longer
+"plugin 'townk/vim-autoclose'
+                " create pairs of (,{,[,",` and ' automatically.
+                " place cursor between them automatically.
+                " delete with one keystroke by doing bs on first sign .
+                " suppress creation of closing sign, by typing ctrl-v in
                 " insert mode immediately prior to typing the opening sign.
-                " Purged 2018.10.28 for incompatibility reasons
-"Plugin 'vim/matchit.vim'
+                " purged 2018.10.28 for incompatibility reasons
+"plugin 'vim/matchit.vim'
                 " part of vim standard distribution since vim 6.0
-"Plugin 'karamcc/vim-streamline'
+"plugin 'karamcc/vim-streamline'
 " statusline changes to adapt to theme  }}}3
 " ------------------------------------
 " all vundle-managed plugins must be added before above line
@@ -103,13 +103,13 @@ source ~/.vim/functions.vim
 
 " ---- use with vim 8.x native plugins management  {{{2
 set loadplugins
-                " Default: on
-                " Option can be reset in ~/.vimrc to 'noloadplugins'
+                " default: on
+                " option can be reset in ~/.vimrc to 'noloadplugins'
                 " in order to disable all plugin loading.
 if &loadplugins
-    " Lazy loading (with '!') of *.vim files in ~/vim/pack/plugins/opt/
-    if has('packages')  " Pick loaded plugins one by one
-        " Make % cmd jump to matching HTML tags, if/else/endif constructs, etc
+    " lazy loading (with '!') of *.vim files in ~/vim/pack/plugins/opt/
+    if has('packages')  " pick loaded plugins one by one
+        " make % cmd jump to matching html tags, if/else/endif constructs, etc
         packadd! matchit
         packadd! delimitmate
         packadd! syntastic
@@ -122,54 +122,59 @@ if &loadplugins
         packadd! syntastic-local-eslint.vim
         "packadd! vim-chef
     else
-        " Automatic loading of *.vim files in ~/vim/pack/plugins/start/
+        " automatic loading of *.vim files in ~/vim/pack/plugins/start/
         packloadall
     endif
 endif
 " }}}2
 
 filetype plugin indent on
-                " Required
-                " Load ftplugin.vim and indent.vim from $vimruntime
+                " required
+                " load ftplugin.vim and indent.vim from $vimruntime
                 " (/usr/share/vim/vim82)
-                " Turn automatic filetype detection on
+                " turn automatic filetype detection on
 
 let g:ft_ignore_pat = '\.\(z\|gz\|bz2\|zip\|tgz\)$'
-                " Ensure contents of compressed files not inspected.
+                " ensure contents of compressed files not inspected.
 let g:rmd_include_html = 1
-                " Source '~/.vim/after/ftplugin/html.vim' for r markdown
+                " source '~/.vim/after/ftplugin/html.vim' for r markdown
 "}}}1
 
 " =========================
-" General settings   {{{1
+" general settings   {{{1
 " =========================
-set path+=**        " Default: 'path=.,/usr/include,,'
-                    " Define directories to be searched when 'gf', '[f',
+set path+=**        " default: 'path=.,/usr/include,,'
+                    " define directories to be searched when 'gf', '[f',
                     " ']f', ':find', ':sfind', ':tabfind', etc are used.
                     " '**' searches downwards 30 dir levels by default.
-set noerrorbells    " Turn off audible error bells
+set noerrorbells    " turn off audible error bells
 set visualbell
 "set t_vb=^[[?5h$<100>^[[?5l
-                    " Does not work in xterm, although should turn on visual
+                    " does not work in xterm, although should turn on visual
                     " bell (flash display 100ms)
-set title           " Set terminal title to opened file name and appends 'pwd'
-set magic           " Make characters have the same meaning as in grep regexp
+set title           " set terminal title to opened file name and appends 'pwd'
+set magic           " make characters have the same meaning as in grep regexp
                     " 'very magic': \v in front of a search pattern make
-                    "   every following character except 'a-zA-Z0-9' and '_' have
+                    "   every following character except 'a-za-z0-9' and '_' have
                     "   special meaning
-                    " 'anti very magic': \V has the opposite effect of \v. All
+                    " 'anti very magic': \v has the opposite effect of \v. all
                     "   characters are parsed literally and must be preceded by \
                     "   to activate their special meaning.
                     " ':set nomagic' is the opposite of ':set magic'
-set updatetime=250  " Update faster (CursorHold event)
-set lazyredraw      " Don't allow redraw when using macros
-set mouse=a         " Allow normal mouse behavior in all 4 principal modes
+set updatetime=250  " update faster (cursorhold event)
+set lazyredraw      " don't allow redraw when using macros
+set mouse=a         " allow normal mouse behavior in all 4 principal modes
 set number numberwidth=5
-                    " Place a number left of each line start.
-set timeout         " Timeout on :mappings and key codes (when timeout off (default))
-set timeoutlen=1500 " Define time (ms) available to enter command after the <leader>
-                    " or during entry of key combination. Default value is 1000.
+                    " place a number left of each line start.
+set timeout         " timeout on :mappings and key codes (when timeout off (default))
+set timeoutlen=1500 " define time (ms) available to enter command after the <leader>
+                    " or during entry of key combination. default value is 1000.
                     " synonym of 'set tm=1500'
+set nrformats+=alpha " to be able to increment decrement alpha characters as well 
+                    " as the defaults: bin, octal, hex and decimal, with :
+                    "  - block selection of text section ^vjjjj...
+                    "  - g^A  to increment each row one more than the previous one
+                    "  - g^X   to decrement
 "}}}1
 
 " =========================
