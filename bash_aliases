@@ -377,11 +377,14 @@ alias gtmux='~/.tmux/gnome-term-session.sh'
 function gitsta() {
     case $1 in
         -[aA]|-[aA][lL][lL])
-            git add -u
-            git add -- *
+            git add -u   # Update the index just where entry matching <pathspec> exists
+                         # If no <pathspec> is given, all tracked files in the entire working
+                         # tree are updated
+            git add -- * # option '--' is used to seperate cmd-line options from list of files
+                         # '*' considers adding content of all files in working tree
             ;;
         *)
-            git add "$@"
+            git add "$@"  # add file(s) specified as argument(s)
             ;;
     esac
 }
