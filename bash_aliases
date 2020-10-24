@@ -116,6 +116,32 @@ alias df='df -kP'                   # check available space on volume of
 alias nocomment='grep -Ev '\''(#|$)'\'''
                                     # filter out comments in a grepped file
 
+# Change directory verbosely
+cdv () {
+    # change dir + list target content
+    case x"$1" in
+        "x")
+            #cd || exit ; \ls -AF --color=auto;;
+            cd || return; \ls -AF --"$colopt" ;;
+        *)
+             [ -d "$1" ] &&  cd "$1" && \ls -AF --"$colopt" ;; #|| echo Not a directory.;;
+    esac
+        }
+
+# Super 'ps'
+sps() {
+    # list ps while avoiding matching the 'grep' command line itself
+    \ps aux | grep -E "$@" | grep -v 'grep';
+}
+
+# Disk space usage for non-root users
+function finduserspace () {
+    # print disk space usage for non-root users
+    awk -F: '/bash/ && /home/ {print "/home/"$1}' /etc/passwd | xargs -l sudo du -sm
+}
+
+alias userspace='finduserspace'
+
 #  1}}}
 
 #  System + Hardware info aliases   {{{1
@@ -183,31 +209,6 @@ alias vimsi='vim "+set si"'         # vim with 'smartindent' option enabled
 # aplies to v16.b3
 # alias erlg='erl -s toolbar' # start erlang with toolbar GUI applet
 #   1}}}
-
-# Change directory verbosely
-cdv () {
-    # change dir + list target content
-    case x"$1" in
-        "x")
-            #cd || exit ; \ls -AF --color=auto;;
-            cd || return; \ls -AF --"$colopt" ;;
-        *)
-             [ -d "$1" ] &&  cd "$1" && \ls -AF --"$colopt" ;; #|| echo Not a directory.;;
-    esac
-        }
-
-# Super 'ps'
-sps() {
-    # list ps while avoiding matching the 'grep' command line itself
-    \ps aux | grep -E "$@" | grep -v 'grep';
-}
-
-# Disk space usage for non-root users
-function finduserspace () {
-    # print disk space usage for non-root users
-    awk -F: '/bash/ && /home/ {print "/home/"$1}' /etc/passwd | xargs -l sudo du -sm
-}
-alias userspace='finduserspace'
 
 # 'man' cmd overloading   {{{1
 # overload 'man' -- allow info on builtins in pseudo man-page format
@@ -354,7 +355,15 @@ function weather() {
 alias worldmap='telnet mapscii.me'
 #    1}}}
 
+# Backup (rsync)    {{{1
+function bckitup () {
+    # backs up specific volumes and files to external SSD when mounted
+    sudo /opt/scripts/runoncedaily.sh ckb last_bu /opt/scripts/bckitup.sh
+}
+#   1}}}
+
 # =====================================================================
+
 # PACKAGE/ENVIRONMENT SPECIFIC SHORTCUTS AND FUNCTIONS   {{{1
 
 # =============================

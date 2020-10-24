@@ -629,10 +629,12 @@ let g:syntastic_python_python_use_codec = 0
                 " See https://docs.python.org/reference/lexical_analysis.html \
                 " \ #encoding-declarations such as:
                 " https://noseofyeti.readthedocs.org/en/latest/
-let g:syntastic_python_flake8_args = '--ignore=E265,E266'
+let g:syntastic_python_flake8_args = '--ignore=E265,E266,W503,W504'
                 " Suppress Flake8 messages:
                 "   E265: comment blocks should start with `# '
                 "   E266: doubled '#` as in '##` at line start are not standard
+                "   W503: linebreak before binary operator
+                "   W504: linebreak after binary operator
 let g:syntastic_fortran_checkers = ['gfortran']
                 " Checker ignores usual 'g:syntastic_fortran_gfortran_<option>' variables.
                 " See ':h syntastic-checkers' for more details and config tips

@@ -22,7 +22,7 @@ set show-mode-in-prompt on
 # vi insert mode has a blinking underscore as cursor
 # default: prompt is prefixed with '(ins)'
 set vi-ins-mode-string "+"\1\e[3 q\2
-# vi normal/cmd mode has a blinking I beam as cursor; i
+# vi normal/cmd mode has a blinking I beam as cursor
 # default: prompt is prefixed with '(cmd)'
 set vi-cmd-mode-string ":"\1\e[5 q\2
 

@@ -301,12 +301,12 @@ esac
 if [ -n "$(command -v pyenv)" ]; then eval "$(pyenv init -)"; fi
 
 # Ensure global python version is always latest of rolling release available for 'pyenv'
-#    2 lines below are commented because latest rolling release version can be ahead of
-#    versions available for pyenv to install
-#pyenv global "$(/usr/bin/python --version | cut -d' ' -f2)"
-#/usr/bin/python --version | cut -d' ' -f2 >| "${PYENV_ROOT}"/version
-pyenv global "$(tail -1 <( sed '/[a-zA-Z]/d;s/^[ \t]*//' <(pyenv install --list) ))"
-/usr/bin/echo "$(pyenv global)" >| "${PYENV_ROOT}"/version
+pyenv global "$(/usr/bin/python --version | cut -d' ' -f2)"
+/usr/bin/python --version | cut -d' ' -f2 >| "${PYENV_ROOT}"/version
+# Lines below are useful in case latest rolling release version ahead of
+# versions available for pyenv to install
+#pyenv global "$(tail -1 <( sed '/[a-zA-Z]/d;s/^[ \t]*//' <(pyenv install --list) ))"
+#/usr/bin/echo "$(pyenv global)" >| "${PYENV_ROOT}"/version
 
 # Ensure access to 'virtualenvwrapper' runtime namespace
 pyenv virtualenvwrapper

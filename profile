@@ -78,6 +78,10 @@ WORKON_HOME="${HOME}"/.virtualenvs; export WORKON_HOME
 mkdir -p "$WORKON_HOME"
 PROJECT_HOME="${HOME}"/Documents/Work/Data-science; export PROJECT_HOME
 
+PYTHONBREAKPOINT=pudb.set_trace; export PYTHONBREAKPOINT  # for debugging with 'pudb'
+#PYTHONBREAKPOINT=pdb.set_trace; export PYTHONBREAKPOINT  # for debugging with 'pdb'
+
+NLTK_DATA="/var2/nltk_data/"; export NLTK_DATA
 
 # #########
 # PATH
