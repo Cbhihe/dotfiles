@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 # File: ~/.bashrc
-# Last edit: 2020.04.26 at 00:01:20 [ckb]
+# Last edit: 2020.11.04 at 17:10 [ckb]
 # Executed by bash(1) for non-login shells.
 # See /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # -----------------------------------------------------------------------
@@ -59,9 +59,11 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # backup of history file at most every 30 minutes
-#  test result of `find` = any file modified 30 min before or less at test time
-[ -z "$(find "$HISTFILE".backup~ -mmin -30 2>/dev/null)" ] \
-    && { \rm -f "$HISTFILE".backup~ ; \
+#  test result of `find` for file modified 30min before or less
+# [ foo = foo"$(find "$HISTFILE".backup~ -mmin -30 2>/dev/null)" ] \
+# [ -z "$(find "$HISTFILE".backup~ -mmin -30 2>/dev/null)" ] \
+! [ "$(find "$HISTFILE".backup~ -mmin -30 2>/dev/null)" ] \
+    && { \rm -f "$HISTFILE".backup~ 2>/dev/null; \
     /usr/bin/cp --force --backup "$HISTFILE" "$HISTFILE".backup~; }
 # `{ list; of; commands;}'
 # allows group execution of cmds' list in current shell
@@ -300,13 +302,16 @@ esac
 #+ since it manipulates PATH
 if [ -n "$(command -v pyenv)" ]; then eval "$(pyenv init -)"; fi
 
-# Ensure global python version is always latest of rolling release available for 'pyenv'
-pyenv global "$(/usr/bin/python --version | cut -d' ' -f2)"
-/usr/bin/python --version | cut -d' ' -f2 >| "${PYENV_ROOT}"/version
-# Lines below are useful in case latest rolling release version ahead of
-# versions available for pyenv to install
+# Ensure that the pyenv global python version is always the latest of the rolling release,
+# also available to 'pyenv'
+# TODO:  pyenv_actualization.sh
+
+#/usr/bin/python --version | cut -d' ' -f2 >| "${PYENV_ROOT}"/version
+# Useful if latest rolling release version is ahead of versions available for pyenv to install
 #pyenv global "$(tail -1 <( sed '/[a-zA-Z]/d;s/^[ \t]*//' <(pyenv install --list) ))"
-#/usr/bin/echo "$(pyenv global)" >| "${PYENV_ROOT}"/version
+#pyenv global "$(tail -1 <( sed -n '/^[ ]*3\.[0-9]\+\.[0-9]\+[a-z]\?[0-9]*$/p' <(pyenv install --list) ))"
+pyenv global "$(tail -1 <( sed -n '/^[ ]*3\.[0-9]\+(\.[0-9]\+)\?$/p' <(pyenv install --list) ))"
+/usr/bin/echo "$(pyenv global)" >| "${PYENV_ROOT}"/version
 
 # Ensure access to 'virtualenvwrapper' runtime namespace
 pyenv virtualenvwrapper

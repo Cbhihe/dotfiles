@@ -150,7 +150,7 @@ alias battery='watch -n0 cat /sys/class/power_supply/BAT0/capacity'
 alias swinfo='lsb_release -cd; printf "%s\t\t%s\n" "Kernel:" "$(uname -rsi)"'
                                         # prints distro specific info
 alias cpuinfo='lscpu'                   # all info about the CPU
-alias hwinfo='sudo dmidecode -q > ~/Documents/Backups/hw-profile.txt; printf "%s\n" "Hardware profile in file: ~/Documents/Backups/hw-profile.txt"'
+alias hwinfo='sudo dmidecode -q >| ~/Documents/Backups/hw-profile.txt; printf "%s\n" "Hardware profile in file: ~/Documents/Backups/hw-profile.txt"'
 alias bioinfo='sudo dmidecode --type 0'  # requires sudo passwd
 alias meminfo='sudo dmidecode --type 17' # requires sudo passwd
 alias gpuinfo='lspci -k | grep -EA2 "VGA|3D"'
