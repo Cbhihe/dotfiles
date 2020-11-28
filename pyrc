@@ -9,6 +9,7 @@ cmd definitions
 
 import os
 import sys
+import re
 
 
 class clear(object):
@@ -22,7 +23,7 @@ class clear(object):
         #clear = lambda: os.system('cls' if os.name == 'nt' else 'clear')
         return ''
 
-clear = clear()
+c = clear = clear()
 
 
 class exit(object):
@@ -45,7 +46,16 @@ class Prompt:
     define python shell prompt
     '''
     def __str__(self):
-        return '%s >>> ' % os.getcwd()
+        pwd_text = os.getcwd()
+        short_pwd_text = re.search(r"/[^/]+/[^/]+/[^/]+$", pwd_text).group(0)
+        if not short_pwd_text:
+            pass
+        elif len(pwd_text) > len(short_pwd_text) + 3:
+            pwd_text = '...' + short_pwd_text
+        else:
+            pass
+
+        return '%s :>' % pwd_text
 
 
 sys.ps1 = Prompt()

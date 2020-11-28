@@ -247,6 +247,27 @@ fi
 #    debian_chroot=$(cat /etc/debian_chroot)
 #fi
 
+# Get name of current Python version via pyenv.
+# Get 'pyenv' global python version (include VEs via pyenv-virtualenv)
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+# Snippet adapted from github.com/jackmaney/bash-profile/blob/master/.bash_profile#L19
+pyenv_py_ver(){
+    py_version=""
+    if [ -n "$(command -v pyenv 2>/dev/null)" ]; then
+        if hash pyenv 2>/dev/null; then
+            #py_version="$(pyenv version | cut -d' ' -f1 2>/dev/null)"
+            py_version="$(python --version | cut -d' ' -f2 2>/dev/null)"
+            #[ -n "$py_version" ] && result="$py_version"
+            #[ -n "$result" ] && echo "$result"
+        fi
+    else
+        # default to system python version if 'pyenv' not installed
+        py_version="$(/usr/bin/python --version | cut -d' ' -f2 2>/dev/null)"
+    fi
+    [ -n "$py_version" ] && echo "$py_version"
+}
+
 if [ "$color_prompt" = yes ]; then
 
     # For Debian based systems only
@@ -256,7 +277,7 @@ if [ "$color_prompt" = yes ]; then
 
     # For Archlinux
     # [ckb 20171203, 20180922] replaced PS1
-    PS1="\\[\\e[0;38;5;166m\\][\\#/\\!]\\[\\e[1;34m\\] \\w\\[\\e[38;5;46m\\] \$(parse_git_branch)\\[\\e[1;38;5;166m\\]\> \\[\\e[0m\\]"
+    PS1="\\[\\e[0;38;5;166m\\][\\#/\\!]\\[\\e[2;33m\\]\$(pyenv_py_ver)\\[\\e[22;1;34m\\] \\w\\[\\e[38;5;46m\\] \$(parse_git_branch)\\[\\e[1;38;5;166m\\]\> \\[\\e[0m\\]"
 
 else
     # For Debian based systems only
@@ -265,7 +286,7 @@ else
 
     # For Archlinux
     # [ckb 20171203, 20180922] replaced PS1
-    PS1="[\\#/\\!] \\[\\w \$(parse_git_branch)\\]\>"
+    PS1="[\\#/\\!]\$(pyenv_py_ver) \\[\\w \$(parse_git_branch)\\]\>"
 fi
 export PS1
 
@@ -296,31 +317,6 @@ esac
 #    }}}1
 
 # ==================================================
-## Python virtual environments    {{{1
-
-# Make sure `eval "$(pyenv init -)"` is placed at end of ~/.bashrc
-#+ since it manipulates PATH
-if [ -n "$(command -v pyenv)" ]; then eval "$(pyenv init -)"; fi
-
-# Ensure that the pyenv global python version is always the latest of the rolling release,
-# also available to 'pyenv'
-# TODO:  pyenv_actualization.sh
-
-#/usr/bin/python --version | cut -d' ' -f2 >| "${PYENV_ROOT}"/version
-# Useful if latest rolling release version is ahead of versions available for pyenv to install
-#pyenv global "$(tail -1 <( sed '/[a-zA-Z]/d;s/^[ \t]*//' <(pyenv install --list) ))"
-#pyenv global "$(tail -1 <( sed -n '/^[ ]*3\.[0-9]\+\.[0-9]\+[a-z]\?[0-9]*$/p' <(pyenv install --list) ))"
-pyenv global "$(tail -1 <( sed -n '/^[ ]*3\.[0-9]\+(\.[0-9]\+)\?$/p' <(pyenv install --list) ))"
-/usr/bin/echo "$(pyenv global)" >| "${PYENV_ROOT}"/version
-
-# Ensure access to 'virtualenvwrapper' runtime namespace
-pyenv virtualenvwrapper
-# load 'virtualenvwrapper' plugin shell functions only
-#+ when using them for the first time
-source /usr/bin/virtualenvwrapper_lazy.sh
-#    }}}1
-
-# ==================================================
 ## Tor    {{{1
 # Set shells to use `torsocks` prefix as default for any cmd.
 #source torsocks on
@@ -334,4 +330,25 @@ source /usr/bin/virtualenvwrapper_lazy.sh
 # Simple bash script to manage multiple active node.js versions
 source /usr/share/nvm/init-nvm.sh
 #   }}}1
+
+# ==================================================
+## Python virtual environments    {{{1
+# PYENV_ROOT, PROJECT_HOME ... defined in ~/.profile
+
+# Make sure `eval "$(pyenv init -)"` is placed at end of ~/.bashrc
+#+ since it manipulates PATH
+[ -n "$(command -v pyenv)" ]  && eval "$(pyenv init -)" && eval "$(pyenv virtualenv-init -)"
+# 'pyenv virtualenv-init -' will automatically activate and deactivate VEs as long as $PWD
+#+ contains file .python-version listing the name of a valid VE as shown in the output of
+#+ 'pyenv virtualenvs'
+
+#/usr/bin/python --version | cut -d' ' -f2 >| "${PYENV_ROOT}"/version
+# Useful if latest rolling release version is ahead of versions available for pyenv to install
+#pyenv global "$(tail -1 <( sed '/[a-zA-Z]/d;s/^[ \t]*//' <(pyenv install --list) ))"
+#pyenv global "$(tail -1 <( sed -n '/^[ ]*3\.[0-9]\+\.[0-9]\+[a-z]\?[0-9]*$/p' <(pyenv install --list) ))"
+#pyenv global "$(tail -1 <( sed -n 's/^[ ]*\(3\.[0-9]\+\.[0-9]\+$\)/\1/p' <(pyenv install --list) ))"
+pyenv global "$(/usr/bin/python --version | cut -d ' ' -f2 2>/dev/null)"
+/usr/bin/echo "$(pyenv global)" >| "${PYENV_ROOT}"/version
+
+#    }}}1
 

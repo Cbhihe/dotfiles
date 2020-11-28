@@ -67,21 +67,26 @@ SPARK_HOME=${HOME}/spark/spark; export SPARK_HOME
 # #########
 # PYTHON
 # #########
-export PYTHONSTARTUP="${HOME}/.pyrc"
+PYTHONSTARTUP="${HOME}/.pyrc"; export PYTHONSTARTUP
 if [ -n "$PYTHONPATH" ]; then
-    PYTHONPATH=${PYTHONPATH}:"${HOME}/Documents/Work/Data-science"
+    # env-var is not null-string
+    PYTHONPATH=${PYTHONPATH}:"${HOME}/Documents/Work/Projects"
 else
-    PYTHONPATH="${HOME}/Documents/Work/Data-science"
+    # env-var is null-string
+    PYTHONPATH="${HOME}/Documents/Work/Projects"
 fi
-PYENV_ROOT="${HOME}"/.pyenv; export PYENV_ROOT   # virtual environment
+#PYTHONBREAKPOINT=pdb.set_trace; export PYTHONBREAKPOINT  # for debugging with 'pdb'
+PYTHONBREAKPOINT=pudb.set_trace; export PYTHONBREAKPOINT  # for debugging with 'pudb'
+
+# PYENV virtual environment
+PYENV_ROOT="${HOME}"/.pyenv; export PYENV_ROOT
+
+# VIRTUALENV's virtualenvwrapper plugin
 WORKON_HOME="${HOME}"/.virtualenvs; export WORKON_HOME
 mkdir -p "$WORKON_HOME"
-PROJECT_HOME="${HOME}"/Documents/Work/Data-science; export PROJECT_HOME
+PROJECT_HOME="${HOME}"/Documents/Work/Projects/BSC/Sgoab/Src; export PROJECT_HOME
 
-PYTHONBREAKPOINT=pudb.set_trace; export PYTHONBREAKPOINT  # for debugging with 'pudb'
-#PYTHONBREAKPOINT=pdb.set_trace; export PYTHONBREAKPOINT  # for debugging with 'pdb'
-
-NLTK_DATA="/var2/nltk_data/"; export NLTK_DATA
+NLTK_DATA="/var/data/nltk_data/"; export NLTK_DATA
 
 # #########
 # PATH
@@ -96,12 +101,11 @@ NLTK_DATA="/var2/nltk_data/"; export NLTK_DATA
 # Use $HOME/ instead of ~/ in PATH for portability
 
 PATH=$PATH:/opt/bin:/opt/scripts
-PATH=$PATH:"${HOME}"/Documents/Scripts # use $HOME/ instead of ~/ for portability
-#PATH=$PATH:"$HOME"/anaconda2/bin      # AWS cli setup, also by Anaconda2 4.3.1 installer
-PATH=$PATH:"${HOME}"/.local/bin
-PATH=$PATH:"$HADOOP_HOME"/bin
-PATH=$PATH:"$SPARK_HOME"/bin
-PATH=$PATH:"$PYENV_ROOT"/bin
+PATH=$PATH:${HOME}/Documents/Scripts # use $HOME/ instead of ~/ for portability
+PATH=$PATH:${HOME}/.local/bin
+PATH=$PATH:${HADOOP_HOME}/bin
+PATH=$PATH:${SPARK_HOME}/bin
+PATH=${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:$PATH   # note that PATH is pre-pended
 
 # #########
 # PATH CLEANING
