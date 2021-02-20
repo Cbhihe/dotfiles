@@ -5,7 +5,7 @@ to start the python interpreter console with basic
 cmd definitions
 '''
 
-# Usage: launch python shell with `/usr/bin/python3 -i .pyrc`
+# Usage: launch python shell with `/usr/bin/python3 -i ~/.pyrc`
 
 import os
 import sys
@@ -22,6 +22,7 @@ class clear(object):
         os.system('cls' if os.name == 'nt' else 'clear')
         #clear = lambda: os.system('cls' if os.name == 'nt' else 'clear')
         return ''
+
 
 c = clear = clear()
 
@@ -47,7 +48,10 @@ class Prompt:
     '''
     def __str__(self):
         pwd_text = os.getcwd()
-        short_pwd_text = re.search(r"/[^/]+/[^/]+/[^/]+$", pwd_text).group(0)
+        short_pwd_text = re.search(r"/[^/]+/[^/]+/[^/]+$", pwd_text)
+        if short_pwd_text:
+            short_pwd_text = short_pwd_text.group(0)
+
         if not short_pwd_text:
             pass
         elif len(pwd_text) > len(short_pwd_text) + 3:
@@ -55,9 +59,10 @@ class Prompt:
         else:
             pass
 
-        return '%s :>' % pwd_text
+        return '%s> ' % pwd_text
 
 
-sys.ps1 = Prompt()
+prompt = Prompt()
+sys.ps1 = '\x1b[33m' + str(prompt) + '\x1b[0m'
 del sys
 del Prompt

@@ -342,12 +342,24 @@ source /usr/share/nvm/init-nvm.sh
 #+ contains file .python-version listing the name of a valid VE as shown in the output of
 #+ 'pyenv virtualenvs'
 
+# Other previous attempts at automation   {{{2
 #/usr/bin/python --version | cut -d' ' -f2 >| "${PYENV_ROOT}"/version
 # Useful if latest rolling release version is ahead of versions available for pyenv to install
 #pyenv global "$(tail -1 <( sed '/[a-zA-Z]/d;s/^[ \t]*//' <(pyenv install --list) ))"
 #pyenv global "$(tail -1 <( sed -n '/^[ ]*3\.[0-9]\+\.[0-9]\+[a-z]\?[0-9]*$/p' <(pyenv install --list) ))"
 #pyenv global "$(tail -1 <( sed -n 's/^[ ]*\(3\.[0-9]\+\.[0-9]\+$\)/\1/p' <(pyenv install --list) ))"
-pyenv global "$(/usr/bin/python --version | cut -d ' ' -f2 2>/dev/null)"
+#pyenv global "$(/usr/bin/python --version | cut -d ' ' -f2 2>/dev/null)"
+#     }}}2
+
+latest_available="$(tail -n 1 < <(sed -n -E 's/^\s*//;/^[0-9]+.+[0-9]$/p' < <(pyenv install --list)))"
+mapfile -t installed < <(pyenv versions)
+#mapfile -t installed < <(pyenv versions | cut -c3- | cut -d' ' -f1)
+if ! grep -q "$latest_available" < <(echo "${installed[@]}"); then
+    pyenv install "$latest_available"
+    pyenv global "$latest_available"
+else
+    pyenv global "$latest_available"
+fi
 /usr/bin/echo "$(pyenv global)" >| "${PYENV_ROOT}"/version
 
 #    }}}1
