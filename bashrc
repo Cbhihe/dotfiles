@@ -351,7 +351,7 @@ source /usr/share/nvm/init-nvm.sh
 #pyenv global "$(/usr/bin/python --version | cut -d ' ' -f2 2>/dev/null)"
 #     }}}2
 
-latest_available="$(tail -n 1 < <(sed -n -E 's/^\s*//;/^[0-9]+.+[0-9]$/p' < <(pyenv install --list)))"
+latest_available="$(tail -n 1 < <(sed -n -E 's/^\s*//;/^[0-9]+[^a-z]+[0-9]$/p' < <(pyenv install --list)))"
 mapfile -t installed < <(pyenv versions)
 #mapfile -t installed < <(pyenv versions | cut -c3- | cut -d' ' -f1)
 if ! grep -q "$latest_available" < <(echo "${installed[@]}"); then
