@@ -13,6 +13,6 @@
 "(/opt/scripts/toggle_touchpad.sh &)"
     Control+Mod4 + p + Release
 
-# send cursor selection to ibrowser's startpageA search field and execute the search
-"(/opt/scripts/startpage_that.sh &)"
+# send cursor selection to browser's startpage search field and execute the search
+"(/opt/scripts/search_that.sh &)"
     Control+Mod4 + s + Release

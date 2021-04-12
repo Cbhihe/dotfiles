@@ -159,10 +159,10 @@ alias gpuinfo='lspci -k | grep -EA2 "VGA|3D"'
 #    'curl -F': curl POSTs data as a filled form using the Content-Type multipart/form-data
 #    ' <- ' when file-name is prefixed with '<' the file is actually treated as its text content
 #       as obtained from stdin '-'
-alias dmesg2bin='/usr/bin/dmesg | /usr/bin/curl -F "f:1=<-" ix.io'
+alias dmesg2bin='/usr/bin/dmesg | curl --upload-file - "http://paste.c-net.org/"'
 
 # send 'journalctl -b' content to pastebin
-alias bootjournal2bin='sudo /usr/bin/journalctl -b | /usr/bin/curl -F '\''f:1=<-'\'' ix.io'
+alias bootjournal2bin='sudo /usr/bin/journalctl -b | curl --upload-file - "http://paste.c-net.org/"'
 
 # Alert about long running commands.
 # Usage: '$ sleep 10; alert '
@@ -300,7 +300,8 @@ alias ping='\ping -c 5'
 
 # find available wlan networks in vicinity
 alias wifiscan='sudo /usr/bin/iw wifi0 scan | grep SSID'
-alias scanwifi='sudo /usr/bin/wpa_cli -i wifi0 scan_results'
+alias wifistatus='sudo /usr/bin/wpa_cli -i wifi0 status'
+alias wifinetworks='sudo iw dev wifi0 scan | grep -E "SSID|signal" | head -n30'
 
 function whereisip() {
     # find where an IP's exit node is located
