@@ -170,7 +170,7 @@ set timeout         " timeout on :mappings and key codes (when timeout off (defa
 set timeoutlen=1500 " define time (ms) available to enter command after the <leader>
                     " or during entry of key combination. default value is 1000.
                     " synonym of 'set tm=1500'
-set nrformats+=alpha " to be able to increment decrement alpha characters as well 
+set nrformats+=alpha " to be able to increment decrement alpha characters as well
                     " as the defaults: bin, octal, hex and decimal, with :
                     "  - block selection of text section ^vjjjj...
                     "  - g^A  to increment each row one more than the previous one
@@ -309,6 +309,8 @@ let g:maplocalleader = ','
 
 map <C-R> :noh<cr>:redraw!"<cr>
                     " Redraw session screen erasing all highlights
+map <C-S> :%s/\s\+$//e<cr>
+                    " Suppress trailing spaces and warning if none found
 map <silent> <leader><cr> :noh<cr>
                     " Temporarily disable highlight when <leader><cr> is pressed
 nnoremap <cr> :noh<cr>
@@ -559,7 +561,7 @@ hi SyntasticWarning ctermfg=215 cterm=underline guisp=Pink
 let g:syntastic_enable_balloons = 1
                 " Not available with every checker
 let g:syntastic_aggregate_errors = 1
-                " Set to 0 (defaut) to show errors for 1st checker chosen, then 
+                " Set to 0 (defaut) to show errors for 1st checker chosen, then
                 " 2nd if 1st checker returns zero error, etc.
                 " Set to 1 to show all errors at once.
 let g:syntastic_sort_aggregated_errors = 1
@@ -787,7 +789,7 @@ set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
 set statusline+=\ \[%{&fileformat}\]
 set statusline+=\ (\%p\%%)
 set statusline+=\ %l/%L:%c
-set statusline+=\ 
+set statusline+=\
 set statusline+=%#warningmsg#
                     " display last warning message, w/ "warningmsg" hl group
 set statusline+=%{SyntasticStatuslineFlag()}

@@ -66,6 +66,9 @@ else
     alias vdir='vdir -AF'               # equal to '\ls -l -b -AF'
 fi
 
+alias diff='\diff -ybBi --suppress-common-lines'
+                                        # ignore case, space changes, blank lines, common lines
+                                        # display side by side
 alias crontab='\crontab -i'
 alias lsblk='\lsblk -o +UUID'
 #alias less='\less -R'                   # maintain screen appearance in presence
@@ -320,7 +323,7 @@ alias ipinfo5='curl ipinfo.io/"$(curl -s icanhazip.com)";printf "\n"'
 
 # display network interface card's MAC
 function nicMacAddress () {
-    awk '{print $2,$(NF-2)}' <(ip -o link) 
+    awk '{print $2,$(NF-2)}' <(ip -o link)
 }
 alias nicmac='nicMacAddress'
 
@@ -451,6 +454,7 @@ fi
 # ARCH LINUX   {{{2
 alias aurvote='ssh aur@aur.archlinux.org vote'
 alias ifplugd='sudo systemctl start netctl-ifplugd@net0'
+alias bscvpn='sudo openfortivpn gw.bsc.es:443 -u cbhihe'
 alias upcvpn='sudo /usr/bin/openvpn --config /etc/openvpn/vpn.upc-fib-access.ovpn'
 alias basetisvpn='sudo /usr/bin/openvpn --config /etc/openvpn/vpn.basetis-pedrera.ovpn'
 alias kubikawsbastion='ssh -i ca.pem/aws_kubikprivatekey.pem basetis@proxy.kubikdata.online'

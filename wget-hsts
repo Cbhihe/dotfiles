@@ -2,3 +2,4 @@
 # Edit at your own risk.
 # <hostname>	<port>	<incl. subdomains>	<created>	<max-age>
 github.com	0	1	1523092287	31536000
+pypi.org	0	1	1623167045	31536000
