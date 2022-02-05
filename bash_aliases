@@ -306,11 +306,25 @@ alias wifiscan='sudo /usr/bin/iw wifi0 scan | grep SSID'
 alias wifistatus='sudo /usr/bin/wpa_cli -i wifi0 status'
 alias wifinetworks='sudo iw dev wifi0 scan | grep -E "SSID|signal" | head -n30'
 
-function whereisip() {
-    # find where an IP's exit node is located
+function locate_ip() {
+    # find out where an exit node is geolocated
     [ $# != 1 ] && printf "\nPlease provide exactly one IP address as argument.\n\n" && return
-    curl ipinfo.io/"$1"
-    printf "\n"
+    /usr/bin/curl -s ipinfo.io/"$1"
+    #printf "\n"
+}
+
+function tor_exit_node_ip() {
+    # find my tor exit node using third party platform, from cli
+    exit_ip_address="$(/usr/bin/curl -s --socks5-hostname localhost:9150 https://api.iplocation.net/? | awk -F'[ |<]{1,}' '/>Your IP</ {print $9}')"
+    #awk '/"country":/ || /"ip":/ {print $0}' < <(locate_ip "$exit_ip_address") | sed -e 's/,$//'
+    jq '.country,.ip' < <(locate_ip "$exit_ip_address")
+}
+alias torexit='tor_exit_node_ip'
+
+function toggle_tor_exit_node() {
+    # toggle between standard multi-country_exit-node and French_exit-node-only settings
+    #sudo sed -i 
+    :
 }
 
 # find where my own external IP's exit node is located
@@ -322,10 +336,10 @@ alias ipinfo4='curl -4 icanhazip.com'
 alias ipinfo5='curl ipinfo.io/"$(curl -s icanhazip.com)";printf "\n"'
 
 # display network interface card's MAC
-function nicMacAddress () {
+function nic_mac_address () {
     awk '{print $2,$(NF-2)}' <(ip -o link)
 }
-alias nicmac='nicMacAddress'
+alias nicmac='nic_mac_address'
 
 # quickly list all TCP/UDP ports on $HOST
 alias portinfo='netstat -tulanp'
@@ -455,6 +469,7 @@ fi
 alias aurvote='ssh aur@aur.archlinux.org vote'
 alias ifplugd='sudo systemctl start netctl-ifplugd@net0'
 alias bscvpn='sudo openfortivpn gw.bsc.es:443 -u cbhihe'
+#alias bscvpn='fortivpn connect bscvpn --user=cbhihe --password'   # requires license activation
 alias upcvpn='sudo /usr/bin/openvpn --config /etc/openvpn/vpn.upc-fib-access.ovpn'
 alias basetisvpn='sudo /usr/bin/openvpn --config /etc/openvpn/vpn.basetis-pedrera.ovpn'
 alias kubikawsbastion='ssh -i ca.pem/aws_kubikprivatekey.pem basetis@proxy.kubikdata.online'
@@ -466,6 +481,7 @@ alias pacorphanclean='sudo pacman -Rns $(pacman -Qtdq)' # orphans' + conf files'
 # =============================
 # PYTHON    {{{2
 alias pythonpath='python -c "import sys; print('\''\n'\''.join(sys.path))"'
+alias pipshow='python -m pip show'
 
 # VENV
 alias vpython='python3 -m venv --system-site-packages --prompt VENV'

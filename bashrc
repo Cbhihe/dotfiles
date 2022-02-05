@@ -87,7 +87,7 @@ shopt -s histverify   # made redundant using 'magic-space' in ~/.inputrc
 ## Env-var and shell options   {{{1
 
 # Sane backend config requirements   
-SANE_USB_WORKAROUND=1 ; export SANE_USB_WORKAROUND
+#SANE_USB_WORKAROUND=1 ; export SANE_USB_WORKAROUND
 
 # 'basic calculator' bc'
 #BC_ENV_ARGS=~/.; export BC_ENV_ARGS
@@ -256,10 +256,8 @@ pyenv_py_ver(){
     py_version=""
     if [ -n "$(command -v pyenv 2>/dev/null)" ]; then
         if hash pyenv 2>/dev/null; then
-            #py_version="$(pyenv version | cut -d' ' -f1 2>/dev/null)"
-            py_version="$(python --version | cut -d' ' -f2 2>/dev/null)"
-            #[ -n "$py_version" ] && result="$py_version"
-            #[ -n "$result" ] && echo "$result"
+            py_version="$(python --version | cut -d' ' -f2 2> /dev/null)"
+            #py_version_short="$(awk '{print substr($0,1,length($0)-1)}' 2>/dev/null)<<< $py_version)"
         fi
     else
         # default to system python version if 'pyenv' not installed
@@ -277,7 +275,8 @@ if [ "$color_prompt" = yes ]; then
 
     # For Archlinux
     # [ckb 20171203, 20180922] replaced PS1
-    PS1="\\[\\e[0;38;5;166m\\][\\#/\\!]\\[\\e[2;33m\\]\$(pyenv_py_ver)\\[\\e[22;1;34m\\] \\w\\[\\e[38;5;46m\\] \$(parse_git_branch)\\[\\e[1;38;5;166m\\]\> \\[\\e[0m\\]"
+    #PS1="\\[\\e[0;38;5;166m\\][\\#/\\!]\\[\\e[2;33m\\]\$(pyenv_py_ver)\\[\\e[22;1;34m\\] \\w\\[\\e[38;5;46m\\] \$(parse_git_branch)\\[\\e[1;38;5;166m\\]\> \\[\\e[0m\\]"
+    PS1="\[\e[0;38;5;166m\][\#/\!]\[\e[2;33m\]\$(pyenv_py_ver)\[\e[22;1;34m\] \w\[\e[38;5;46m\] \$(parse_git_branch)\[\e[1;38;5;166m\]\> \[\e[0m\]"
 
 else
     # For Debian based systems only
@@ -355,11 +354,14 @@ latest_available="$(tail -n 1 < <(sed -n -E 's/^\s*//;/^[0-9]+[^a-z]+[0-9]$/p' <
 mapfile -t installed < <(pyenv versions)
 #mapfile -t installed < <(pyenv versions | cut -c3- | cut -d' ' -f1)
 if ! grep -q "$latest_available" < <(echo "${installed[@]}"); then
-    pyenv install "$latest_available"
-    pyenv global "$latest_available"
+    #pyenv install "$latest_available"
+    #pyenv global "$latest_available"
+    :
 else
-    pyenv global "$latest_available"
+    #pyenv global "$latest_available"
+    :
 fi
+pyenv global 3.10.0     # change manually for every new major version
 /usr/bin/echo "$(pyenv global)" >| "${PYENV_ROOT}"/version
 
 #    }}}1

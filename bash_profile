@@ -62,6 +62,9 @@ if [ -n "$DESKTOP_SESSION" ];then
     export SSH_AUTH_SOCK
 fi
 
+# Replace " [ "$XDG_VTNR" -eq 1 ] " by " [ "$XDG_VTNR" -le 3 ] " (for vt1 to vt3)
+#+ to be able to use graphical login on more than 1 virtual terminal
+# Commented block below to prevent autoexec of Xorg upon user login
 #if [ -z "$DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq 1 ] ; then
 #     exec startx
 #fi

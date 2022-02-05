@@ -45,7 +45,7 @@ LANG=en_US.UTF-8; export LANG
 # Set default text editor to make sure that 'vim' is used with 'visudo'
 VISUAL=/usr/bin/vim ; export VISUAL
 # When set, VISUAL prevails on env-var EDITOR
-#set EDITOR=vim; export EDITOR 
+#set EDITOR=vim; export EDITOR
 SUDO_EDITOR=/usr/bin/vim; export SUDO_EDITOR
 SYSTEMD_EDITOR=/usr/bin/vim; export SYSTEMD_EDITOR
 
