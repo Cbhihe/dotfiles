@@ -69,6 +69,7 @@ fi
 alias diff='\diff -ybBi --suppress-common-lines'
                                         # ignore case, space changes, blank lines, common lines
                                         # display side by side
+alias prename='/usr/bin/perl-rename'
 alias crontab='\crontab -i'
 alias lsblk='\lsblk -o +UUID'
 #alias less='\less -R'                   # maintain screen appearance in presence
@@ -140,10 +141,16 @@ sps() {
 # Disk space usage for non-root users
 function finduserspace () {
     # print disk space usage for non-root users
-    awk -F: '/bash/ && /home/ {print "/home/"$1}' /etc/passwd | xargs -l sudo du -sm
+    /usr/bin/awk -F: '/bash/ && /home/ {print "/home/"$1}' /etc/passwd | xargs -l sudo du -sm
 }
 
 alias userspace='finduserspace'
+
+bgproc() {
+    # print all background processes (works on Linux `procps` implementation of `ps`)
+
+    \ps -eo pid,pgid,tpgid,args | /usr/bin/awk 'NR == 1 || ($3 != -1 && $2 != $3)';
+}
 
 #  1}}}
 
@@ -335,6 +342,10 @@ alias ipinfo3='curl -s ifconfig.co'   # also: 'ifonfig.co/json', 'ifconfig.co/co
 alias ipinfo4='curl -4 icanhazip.com'
 alias ipinfo5='curl ipinfo.io/"$(curl -s icanhazip.com)";printf "\n"'
 
+# DNS lookup(forward and reverse)
+alias dnslookup='dig +short -p 53 @8.8.8.8 '
+alias revdnslookup='dig +short -p 53 @8.8.8.8 -x '
+
 # display network interface card's MAC
 function nic_mac_address () {
     awk '{print $2,$(NF-2)}' <(ip -o link)
@@ -409,7 +420,7 @@ function gitsta() {
 
 # commit function
 function gitcom() {
-    # "$*" makes all arguments to one
+    # "$*" makes all arguments as one when quoted
     git commit -m  "$*"
 }
 alias gitloglast='for branch in "$(git branch -r | grep -v HEAD)";do echo -e "$(git show --format="%ci %cr" "$branch" | head -n 1)" \\t"${branch}"; done | sort -r'

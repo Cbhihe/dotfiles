@@ -1,18 +1,34 @@
-# KEY bindings
-#   File: ~/.xbindkeysrc
+# #################################################
+# Key bindings
+# #################################################
+
+# File: ~/.xbindkeysrc
 
 # After changes, reload file configuration and apply changes.
 #    $ xbindkeys --poll-rc
 
 # To find keycodes:
-#    $ xbindkeys --key         # to grab the keycode of one key
-#    $ xbindkeys --multikey    # to grab the keycode of multiple keys
+#    $ xbindkeys -k | --key          # to grab the keycode of one key
+#    $ xbindkeys -mk | --multikey    # to grab the keycode of multiple keys
 
+# #################################################3
 
-# Toggle mouse-pad on/off
+# toggle mouse-pad on/off
+#   Control + Magic + p
 "(/opt/scripts/toggle_touchpad.sh &)"
     Control+Mod4 + p + Release
 
-# send cursor selection to browser's startpage search field and execute the search
+# send cursor selection to browser's default search engine; execute the search
+#   Control + Magic + s
 "(/opt/scripts/search_that.sh &)"
     Control+Mod4 + s + Release
+
+# screen area shot, sent directly to 'Pictures' directory
+#   Shift + Print
+"(/usr/bin/gnome-screenshot -a &)"
+    m:0x1 + c:107
+
+# screen area shot, sent directly to 'UI clipboard'
+#  Control + Shift + Print
+"(/usr/bin/gnome-screenshot -ac &)"
+    m:0x1 + c:50

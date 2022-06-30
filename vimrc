@@ -310,7 +310,7 @@ let g:maplocalleader = ','
 map <C-R> :noh<cr>:redraw!"<cr>
                     " Redraw session screen erasing all highlights
 map <C-S> :%s/\s\+$//e<cr>
-                    " Suppress trailing spaces and warning if none found
+                    " Suppress trailing spaces; warn if none found
 map <silent> <leader><cr> :noh<cr>
                     " Temporarily disable highlight when <leader><cr> is pressed
 nnoremap <cr> :noh<cr>
