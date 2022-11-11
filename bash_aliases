@@ -43,7 +43,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias la='\ls -AC --color'          # list "almost all", by column
     alias lsa='\ls -AF --color=auto'
     alias lsi='\ls -1iqF --color=auto'  # list inode numbers and file names
-    alias ll='\ls -lsAF --time-style=+%Y%m%d-%H%M%S --color'
+    alias ll='\ls -lsiAF --time-style=+%Y%m%d-%H%M%S --color'
                                         # as before +long formats +size in blocks
     alias lc='\ls -CF --color=auto'     # list entry by column, classify
 #   lld () {\ls -AlF --color=auto $1 | egrep "^d";}
@@ -155,12 +155,17 @@ bgproc() {
 #  1}}}
 
 #  System + Hardware info aliases   {{{1
+alias journalctl='journalctl -o short-precise'
+alias lsmod='( \lsmod | \head -1 && \lsmod | \tail -n $(( $(\lsmod | \wc -l) -1 )) | \sort ) | \less'
+                # srt 'lsmod' output while preserving standard header
 alias battery='watch -n0 cat /sys/class/power_supply/BAT0/capacity'
                 # display battery charge info in real time
 alias swinfo='lsb_release -cd; printf "%s\t\t%s\n" "Kernel:" "$(uname -rsi)"'
-                                        # prints distro specific info
-alias cpuinfo='lscpu'                   # all info about the CPU
-alias hwinfo='sudo dmidecode -q >| ~/Documents/Backups/hw-profile.txt; printf "%s\n" "Hardware profile in file: ~/Documents/Backups/hw-profile.txt"'
+                # prints distro specific info
+alias cpuinfo='lscpu'
+                # all info about the CPU
+alias hwinfo1='\hwinfo'
+alias hwinfo2='sudo dmidecode -q >| ~/Documents/Backups/hw-profile.txt; printf "%s\n" "Hardware profile in file: ~/Documents/Backups/hw-profile.txt"'
 alias bioinfo='sudo dmidecode --type 0'  # requires sudo passwd
 alias meminfo='sudo dmidecode --type 17' # requires sudo passwd
 alias gpuinfo='lspci -k | grep -EA2 "VGA|3D"'
@@ -309,7 +314,7 @@ function usage() {
 alias ping='\ping -c 5'
 
 # find available wlan networks in vicinity
-alias wifiscan='sudo /usr/bin/iw wifi0 scan | grep SSID'
+alias wifiscan='sudo /usr/bin/iw wifi0 scan | grep -E "SSID:"'
 alias wifistatus='sudo /usr/bin/wpa_cli -i wifi0 status'
 alias wifinetworks='sudo iw dev wifi0 scan | grep -E "SSID|signal" | head -n30'
 
@@ -322,9 +327,15 @@ function locate_ip() {
 
 function tor_exit_node_ip() {
     # find my tor exit node using third party platform, from cli
-    exit_ip_address="$(/usr/bin/curl -s --socks5-hostname localhost:9150 https://api.iplocation.net/? | awk -F'[ |<]{1,}' '/>Your IP</ {print $9}')"
+    #exit_ip_address="$(/usr/bin/curl -s --socks5-hostname localhost:9150 https://api.iplocation.net/? | awk -F'[ |<]{1,}' '/>Your IP</ {print $9}')"
     #awk '/"country":/ || /"ip":/ {print $0}' < <(locate_ip "$exit_ip_address") | sed -e 's/,$//'
-    jq '.country,.ip' < <(locate_ip "$exit_ip_address")
+    #jq '.country,.ip' < <(locate_ip "$exit_ip_address")
+    #exit_ip_json="$(/usr/bin/curl -s --socks5-hostname localhost:9150 ipinfo.io/json)"
+    exit_ip_json="$(/usr/bin/curl -s --socks5-hostname localhost:9150 ipinfo.io)"
+    city="$(jq -r '.city' <<< "$exit_ip_json")"
+    country="$(jq -r '.country' <<< "$exit_ip_json")"
+    ip="$(jq -r '.ip' <<< "$exit_ip_json")"
+    printf '%s (%s, %s)\n' "$ip" "$city" "$country"
 }
 alias torexit='tor_exit_node_ip'
 
@@ -336,11 +347,14 @@ function toggle_tor_exit_node() {
 
 # find where my own external IP's exit node is located
 # display plain unproxied ip
-alias ipinfo1='wget http://ipinfo.io/ip -qO -'
+#alias ipinfo1='ipinfo="$(wget http://ipinfo.io/ip -qO -)" echo -e "${ipinfo}\n"'
+#alias ipinfo1='ipinfo=$(wget http://ipinfo.io/ip -qO -); echo "$ipinfo"'
+#alias ipinfo1='echo $(wget http://ipinfo.io/ip -qO -)'
+alias ipinfo1='curl -s ipinfo.io/json; printf "\n"'
 alias ipinfo2='curl -s checkip.dyndns.org | sed -e "s/.*Current IP Address: //" -e "s/<.*$//"'
 alias ipinfo3='curl -s ifconfig.co'   # also: 'ifonfig.co/json', 'ifconfig.co/country'
 alias ipinfo4='curl -4 icanhazip.com'
-alias ipinfo5='curl ipinfo.io/"$(curl -s icanhazip.com)";printf "\n"'
+alias ipinfo5='curl ipinfo.io/"$(curl -s icanhazip.com)"; printf "\n"'
 
 # DNS lookup(forward and reverse)
 alias dnslookup='dig +short -p 53 @8.8.8.8 '
@@ -406,11 +420,12 @@ alias gtmux='~/.tmux/gnome-term-session.sh'
 function gitsta() {
     case $1 in
         -[aA]|-[aA][lL][lL])
-            git add -u   # Update the index just where entry matching <pathspec> exists
-                         # If no <pathspec> is given, all tracked files in the entire working
-                         # tree are updated
-            git add -- * # option '--' is used to seperate cmd-line options from list of files
-                         # '*' considers adding content of all files in working tree
+            git add -u     # Update the index just where entry matching <pathspec> exists
+                           # If no <pathspec> is given, all tracked files in the entire working
+                           # tree are updated
+            git add -- *   # option '--' is used to seperate cmd-line options from list of files
+                           # '*' considers adding content of all files in working tree
+            for file in .[^.]*; do git add -- "$file"; done
             ;;
         *)
             git add "$@"  # add file(s) specified as argument(s)
@@ -423,7 +438,13 @@ function gitcom() {
     # "$*" makes all arguments as one when quoted
     git commit -m  "$*"
 }
-alias gitloglast='for branch in "$(git branch -r | grep -v HEAD)";do echo -e "$(git show --format="%ci %cr" "$branch" | head -n 1)" \\t"${branch}"; done | sort -r'
+function gitloglast() {
+    for branch in $(git branch -r | grep -v HEAD); do
+        # 'branch' name cannot contain space
+        echo -e "$(git show --format="%ci %cr" "$branch" | head -n 1)" \\t"${branch}"
+    done | sort -r
+}
+
 #alias gitlog='git log --pretty=format:"%>(9)%Cgreen%h%Creset: Author: %Cblue%an%Creset | Committer: %Cblue%cn%Creset | Time: %ad%n         Commit note: %s" --graph --date=format:"%Y-%M-%d %H:%m:%S"'
 # Show git log with commit time-stamp and note
 alias gitlog='git log --all --full-history --color --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd)%Creset A:%C(bold blue)<%an>%Creset C:%C(bold blue)<%cn>%Creset" --abbrev-commit --date=format:"%Y%m%d-%H:%M"'

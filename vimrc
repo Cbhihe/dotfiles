@@ -408,7 +408,8 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
                     " Source  ~/.vimrc in a jiffy
 nnoremap <silent> <Leader>ed :Explore<CR>
                     " Opens separate buffer in file tree exploration mode
-cmap w!! w !sudo sh -c "cat > %"
+cmap w!! w !sudo sh -c 'cat > "%"'
+cmap w!!! w !sudo tee >/dev/null "%"
                     " force writing buffer to current file with sudo in case
                     " buffer was opened without necessary root privileges.
 cnoremap lg !ls -AF *<C-Z>

@@ -3,4 +3,5 @@
 # <hostname>	<port>	<incl. subdomains>	<created>	<max-age>
 raw.githubusercontent.com	0	0	1642963101	31536000
 github.com	0	1	1523092287	31536000
+ipinfo.io	0	1	1660992504	2592000
 pypi.org	0	1	1623167045	31536000

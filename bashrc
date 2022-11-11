@@ -46,7 +46,7 @@ HISTTIMEFORMAT='%F %T - '; export HISTTIMEFORMAT
 #HISTTIMEFORMAT="%Y%m%d %T - "
 # Ignore specific commands (full length match)
 HISTIGNORE="?:cd:ls:ll:bg:fg:cdv:lsa:h:hi:his:hist:histo:histor:history"
-HISTSIZE=300                    # Default: 500
+HISTSIZE=750                    # Default: 500
 HISTFILESIZE=1200               # Default: HISTZISE
 HISTCONTROL=ignoreboth
 # If "ignoreboth" is commented out, history records all command lines
@@ -361,7 +361,7 @@ else
     #pyenv global "$latest_available"
     :
 fi
-pyenv global 3.10.0     # change manually for every new major version
+#pyenv global 3.10.0     # change manually for every new major version
 /usr/bin/echo "$(pyenv global)" >| "${PYENV_ROOT}"/version
 
 #    }}}1

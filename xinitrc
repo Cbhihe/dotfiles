@@ -15,6 +15,7 @@ export SSH_AUTH_SOCK
 xbindkeys
 
 # Run Gnome on Xorg session only
+export XDG_SESSION_TYPE=x11
 export DE="gnome"
 exec gnome-session
 
