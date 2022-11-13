@@ -810,6 +810,13 @@ set laststatus=2
                     " By default 'syntax on' also turns on filetype detection.
                     " Overrule previously defined user highlight color settings.
 
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+                    " Set Vim-specific sequences for RGB colors as a
+                    " workaround for Vim color schemes to work in Tmux.
+                    " See:  https://stackoverflow.com/questions/47969858/
+                    "       vim-colors-not-showing-in-tmux/47994805#47994805
+
 if &term ==# 'xterm'
     set background=dark
 elseif &term ==# 'xterm-256color'
