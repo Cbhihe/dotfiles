@@ -1,10 +1,17 @@
 #!/usr/bin/bash
 
 # File: ~/.bashrc
-# Last edit: 2020.11.04 at 17:10 [ckb]
+# Last edit: 2022.11.04 at 17:10 [ckb]
 # Executed by bash(1) for non-login shells.
 # See /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # -----------------------------------------------------------------------
+
+## FOLDS how-to
+# zo: opens
+# zc: closes
+# zM: closes all folds
+# zR: opens all folds
+# 
 
 # If not running interactively, don't do anything
 case $- in
@@ -40,6 +47,7 @@ MAILCHECK=60
 # ==================================================
 ##  History    {{{1
 # Suppress duplicate lines or lines starting with space in the history.
+# S# Suppress duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTFILE=$HOME/.bash_history    # Default
 HISTTIMEFORMAT='%F %T - '; export HISTTIMEFORMAT
@@ -49,11 +57,11 @@ HISTIGNORE="?:cd:ls:ll:bg:fg:cdv:lsa:h:hi:his:hist:histo:histor:history"
 HISTSIZE=750                    # Default: 500
 HISTFILESIZE=1200               # Default: HISTZISE
 HISTCONTROL=ignoreboth
-# If "ignoreboth" is commented out, history records all command lines
+# If "ignoreboth" above is commented out, history records all command lines
 #+ entered after a prompt, including those beginning with a space and
 #+ duplicated CMDs. In that case, it is better to use \# in prompt PS1
 #+ (counts number of shell prompts in sessions), instead of \! (displays
-#+ last entry rank in hist stack +1)
+#+ last entry rank in hist stack +1)ee bash(1) for more options
 
 # Append to the history file, don't overwrite it
 shopt -s histappend

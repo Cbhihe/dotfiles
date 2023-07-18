@@ -40,6 +40,14 @@ LANG=en_US.UTF-8; export LANG
 #POSIXLY_CORRECT=1; export POSIXLY_CORRECT
 
 # #########
+# INPUT METHOD FRAMEWORK (IMF)
+# #########
+# Evars below are defined in /etc/environment
+#GTK_IM_MODULE=ibus; export GTK_IM_MODULE
+#QT_IM_MODULE=ibus; export QT_IM_MODULE
+#XMODIFIERS=@im=ibus; export XMODIFIERS
+
+# #########
 # VISUAL, EDITOR, SUDO_EDITOR, SYSTEMD_EDITOR
 # #########
 # Set default text editor to make sure that 'vim' is used with 'visudo'

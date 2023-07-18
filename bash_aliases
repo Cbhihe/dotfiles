@@ -38,12 +38,12 @@ if [ -x /usr/bin/dircolors ]; then
 
     alias less='\less -R'               # recognize dANSI color codes as input interpreted by term
     alias ls='\ls -F --color=auto'      # option -F to classify list items with */=>@|
-    #alias ls='\ls -F --color=always | \less -r'
-                                        # inoperative
+    alias ll='\ls -l --color=auto'
+    #alias ls='\ls -F --color=always | \less -r' # inoperative
     alias la='\ls -AC --color'          # list "almost all", by column
     alias lsa='\ls -AF --color=auto'
     alias lsi='\ls -1iqF --color=auto'  # list inode numbers and file names
-    alias ll='\ls -lsiAF --time-style=+%Y%m%d-%H%M%S --color'
+    alias lla='\ls -lsiAF --time-style=+%Y%m%d-%H%M%S --color'
                                         # as before +long formats +size in blocks
     alias lc='\ls -CF --color=auto'     # list entry by column, classify
 #   lld () {\ls -AlF --color=auto $1 | egrep "^d";}
@@ -174,10 +174,10 @@ alias gpuinfo='lspci -k | grep -EA2 "VGA|3D"'
 #    'curl -F': curl POSTs data as a filled form using the Content-Type multipart/form-data
 #    ' <- ' when file-name is prefixed with '<' the file is actually treated as its text content
 #       as obtained from stdin '-'
-alias dmesg2bin='/usr/bin/dmesg | curl --upload-file - "http://paste.c-net.org/"'
+alias dmesg2bin='/usr/bin/dmesg | sed -e "s/rameau/HOST/g; s/ckb/USER/g" | curl --upload-file - "http://paste.c-net.org/"'
 
 # send 'journalctl -b' content to pastebin
-alias bootjournal2bin='sudo /usr/bin/journalctl -b | curl --upload-file - "http://paste.c-net.org/"'
+alias bootjournal2bin='sudo /usr/bin/journalctl -b | sed -e "s/rameau/HOST/g; s/ckb/USER/g" | curl --upload-file - "http://paste.c-net.org/"'
 
 # Alert about long running commands.
 # Usage: '$ sleep 10; alert '
@@ -362,7 +362,7 @@ alias revdnslookup='dig +short -p 53 @8.8.8.8 -x '
 
 # display network interface card's MAC
 function nic_mac_address () {
-    awk '{print $2,$(NF-2)}' <(ip -o link)
+    awk '$2 ~ /net0|wifi0/ {print $2,$(NF-4)}' <(ip -o link)
 }
 alias nicmac='nic_mac_address'
 
@@ -386,6 +386,15 @@ function iswebup() {
     [ $# != 1 ] && printf "\nPlease provide exactly one web site as argument.\n\n" && return
     curl --head -s "$1" -L | grep HTTP/
 }
+
+function myrouter_public_ip () {
+    # relies on www.noip.com dynamic DNS freemium service
+    # requires prior registration from <myrouter> with username, password, and hostname of <myrouter>
+    dom="homerouter1.hopto.org"       # hostname of <myrouter>
+    /usr/bin/dig $dom | awk -v dom=$dom '{ if ($1 ~ "^"dom) print $NF;}'
+}
+alias myrouterpublicip='myrouter_public_ip'
+
 #    1}}}
 
 # Gadgets    {{{1
@@ -438,6 +447,7 @@ function gitcom() {
     # "$*" makes all arguments as one when quoted
     git commit -m  "$*"
 }
+
 function gitloglast() {
     for branch in $(git branch -r | grep -v HEAD); do
         # 'branch' name cannot contain space
